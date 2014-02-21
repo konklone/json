@@ -65,7 +65,14 @@ function update() {
     var string = $.trim($(".json textarea").val());
     if (!string) return;
 
-    var json = JSON.parse(string);
+    var json;
+    try {
+        json = JSON.parse(string);
+    } catch(err) {
+        console.log("Error with JSON.parse, trying eval: " + err);
+        json = eval("(" + string + ")");
+    }
+    console.log(json);
     var csv = json2csv(json);
 
     // now, make a data: URI out of it
