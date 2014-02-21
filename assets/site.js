@@ -80,4 +80,7 @@ function update() {
 
 $(function() {
     $(".json button").click(update);
+    $(".csv textarea").click(function() {
+        this.focus(); this.select();
+    });
 });
