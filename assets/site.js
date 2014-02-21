@@ -66,8 +66,14 @@ function update() {
     var json = JSON.parse(string);
     var csv = json2csv(json);
 
+    // now, make a data: URI out of it
+    // thanks to http://jsfiddle.net/terryyounghk/KPEGU/
+    // and http://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side
+    var uri = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+
     $(".csv").removeClass("nothing");
     $(".csv textarea").val(csv);
+    $(".csv a.download").attr("href", uri);
 
     return false;
 }
