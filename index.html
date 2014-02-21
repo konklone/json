@@ -10,6 +10,13 @@
 <style>
 
 body {padding: 20px;}
+h1 {
+  font-size: 16pt; padding: 0; margin: 0;
+  margin-bottom: 10px;
+}
+
+span.warning {color: #888;}
+
 .json textarea {width: 90%; height: 20em;}
 .csv textarea {width: 90%; height: 10em;}
 
@@ -25,6 +32,7 @@ footer {
 }
 footer p {
   display: inline-block;
+  line-height: 25px;
   border-top: 1px solid #888;
   padding-top: 5px;
 }
@@ -36,10 +44,12 @@ footer p {
 </head>
 <body>
 
+<h1>Convert JSON to CSV</h1>
+
 <section class="json">
 
   <p>
-    Paste your JSON below and press <button>Go</button>.
+    Paste your JSON below and press <button>Go</button>. <span class="warning">Very large files may cause trouble &mdash; the conversion is done inside your browser.</span>
 
     <!-- <a class="help">Not coming out the way you were hoping?</a> -->
   </p>
@@ -58,7 +68,11 @@ footer p {
 
 <footer>
 <p>
-Code on <a href="https://github.com/konklone/json">Github</a>. Made by <a href="https://twitter.com/konklone">@konklone</a>. Help from <a href="https://twitter.com/benbalter">@benbalter</a> and <a href="https://github.com/onyxfish/csvkit/blob/master/csvkit/convert/js.py#L8-L27">code inspiration</a> from <a href="https://twitter.com/onyxfish">@onyxfish</a>'s <a href="http://csvkit.readthedocs.org/en/latest/scripts/in2csv.html">csvkit</a>.
+  Code on <a href="https://github.com/konklone/json">Github</a>, please <a href="https://github.com/konklone/json/issues">suggest improvements</a>.
+
+  <br/>
+
+  Made by <a href="https://twitter.com/konklone">@konklone</a>. Help from <a href="https://twitter.com/benbalter">@benbalter</a> and <a href="https://github.com/onyxfish/csvkit/blob/master/csvkit/convert/js.py#L8-L27">code inspiration</a> from <a href="https://twitter.com/onyxfish">@onyxfish</a>'s <a href="http://csvkit.readthedocs.org/en/latest/scripts/in2csv.html">csvkit</a>.
 </p>
 </footer>
 

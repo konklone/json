@@ -1,4 +1,5 @@
-// adapted from csvkit's https://github.com/onyxfish/csvkit/blob/master/csvkit/convert/js.py#L8-L27
+// adapted from csvkit's recursive JSON flattening mechanism:
+// https://github.com/onyxfish/csvkit/blob/master/csvkit/convert/js.py#L8-L27
 function parse_object(obj, path) {
     if (path == undefined)
         path = "";
@@ -28,13 +29,14 @@ function parse_object(obj, path) {
     else return {};
 }
 
+
+// otherwise, just find the first one
 function arrayFrom(json, key) {
     if ($.type(json) == "array")
         return json;
     else if (key)
         return json[key];
 
-    // otherwise, just find the first one
     else {
         for (var key in json) {
             if ($.type(json[key]) == "array")
