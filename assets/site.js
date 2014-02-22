@@ -44,7 +44,7 @@ function arrayFrom(json, key) {
         }
 
         // none found
-        return [];
+        return [json];
     }
 }
 
@@ -72,7 +72,7 @@ function update() {
         console.log("Error with JSON.parse, trying eval: " + err);
         json = eval("(" + string + ")");
     }
-    console.log(json);
+    // console.log(json);
     var csv = json2csv(json);
 
     // now, make a data: URI out of it
