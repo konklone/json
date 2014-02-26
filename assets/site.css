@@ -1,0 +1,27 @@
+body {padding: 20px;}
+h1 {
+  font-size: 16pt; padding: 0; margin: 0;
+  margin-bottom: 10px;
+}
+
+span.warning {color: #888;}
+
+.json textarea {width: 90%; height: 20em;}
+.csv textarea {width: 90%; height: 10em;}
+
+.csv {
+  color: black;
+  margin-top: 30px;
+}
+
+.csv.nothing {color: #888;}
+
+footer {
+  margin-top: 30px;
+}
+footer p {
+  display: inline-block;
+  line-height: 25px;
+  border-top: 1px solid #888;
+  padding-top: 5px;
+}
