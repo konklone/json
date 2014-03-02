@@ -29,82 +29,18 @@
 
 <!-- google spreadsheets integration -->
 <script type="text/javascript" src="https://apis.google.com/js/client.js"></script>
+<script type="text/javascript" src="assets/google.js"></script>
+
 <script>
-  var CLIENT_ID = "196458768721-u75306nieic87rbove3mvn617r60aakg.apps.googleusercontent.com";
-  var SCOPES = ["https://www.googleapis.com/auth/drive.file"];
-
-  function checkAuth() {
-    gapi.auth.authorize({
-      client_id: CLIENT_ID,
-      scope: SCOPES.join(' '),
-      immediate: true
-    }, handleAuthResult);
-
-    return false;
-  }
-
-  function handleAuthResult(authResult) {
-    if (authResult) {
-      // Access token has been successfully retrieved, requests can be sent to the API
-      openSpreadsheet();
-    } else {
-      // No access token could be retrieved, force the authorization flow.
-      gapi.auth.authorize({
-        client_id: CLIENT_ID,
-        scope: SCOPES.join(' '),
-        immediate: false
-      }, handleAuthResult);
-    }
-  }
-
-  function openSpreadsheet() {
-    gapi.client.load('drive', 'v2', function() {
-      console.log("Loaded client.");
-
-      var csv = $(".csv textarea").val();
-      insertFile(csv, function(file) {
-        if (file)
-          window.open(file.alternateLink);
-      });
-    });
-  }
-
-  /* todo:
-    function utf8_to_b64( str ) {
-      return window.btoa(unescape(encodeURIComponent( str )));
-    }
-
-    function b64_to_utf8( str ) {
-        return decodeURIComponent(escape(window.atob( str )));
-    }
-  */
-
-  // see https://developers.google.com/drive/v2/reference/files/insert#examples
-  function insertFile(data, callback) {
-    const boundary = '-------314159265358979323846';
-    const delimiter = "\r\n--" + boundary + "\r\n";
-    const close_delim = "\r\n--" + boundary + "--";
-
-
-    var contentType = "text/csv";
-    var metadata = {
-      'title': "results.csv",
-      'mimeType': contentType
-    };
-
-    var request = gapi.client.request({
-        'path': '/upload/drive/v2/files',
-        'method': 'POST',
-        'params': {'uploadType': 'media', 'convert': true},
-        'headers': {'Content-Type': 'text/csv'},
-        'body': data});
-
-    if (callback)
-      request.execute(callback);
-  }
-
   $(function() {
-    $("a.google").click(checkAuth);
+    // transform functions
+    $(".json button").click(update);
+    $(".csv textarea").click(function() {
+        this.focus(); this.select();
+    });
+
+    // Google link
+    $("a.google").click(Google.checkAuth);
   });
 </script>
 

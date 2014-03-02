@@ -1,5 +1,7 @@
 // adapted from csvkit's recursive JSON flattening mechanism:
 // https://github.com/onyxfish/csvkit/blob/master/csvkit/convert/js.py#L8-L27
+
+
 function parse_object(obj, path) {
     if (path == undefined)
         path = "";
@@ -86,10 +88,3 @@ function update() {
 
     return false;
 }
-
-$(function() {
-    $(".json button").click(update);
-    $(".csv textarea").click(function() {
-        this.focus(); this.select();
-    });
-});
