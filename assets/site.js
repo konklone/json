@@ -1,6 +1,7 @@
 // adapted from csvkit's recursive JSON flattening mechanism:
 // https://github.com/onyxfish/csvkit/blob/master/csvkit/convert/js.py#L8-L27
 
+// depends on jquery and jquery-csv (for now)
 
 function parse_object(obj, path) {
     if (path == undefined)
@@ -64,27 +65,27 @@ function json2csv(json) {
 }
 
 function update() {
-    var string = $.trim($(".json textarea").val());
-    if (!string) return;
+  var string = $.trim($(".json textarea").val());
+  if (!string) return;
 
-    var json;
-    try {
-        json = JSON.parse(string);
-    } catch(err) {
-        console.log("Error with JSON.parse, trying eval: " + err);
-        json = eval("(" + string + ")");
-    }
-    // console.log(json);
-    var csv = json2csv(json);
+  var json;
+  try {
+      json = JSON.parse(string);
+  } catch(err) {
+      console.log("Error with JSON.parse, trying eval: " + err);
+      json = eval("(" + string + ")");
+  }
 
-    // now, make a data: URI out of it
-    // thanks to http://jsfiddle.net/terryyounghk/KPEGU/
-    // and http://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side
-    var uri = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+  var csv = json2csv(json);
 
-    $(".csv").removeClass("nothing");
-    $(".csv textarea").val(csv);
-    $(".csv a.download").attr("href", uri);
+  // now, make a data: URI out of it
+  // thanks to http://jsfiddle.net/terryyounghk/KPEGU/
+  // and http://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side
+  var uri = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
 
-    return false;
+  $(".csv").removeClass("nothing");
+  $(".csv textarea").val(csv);
+  $(".csv a.download").attr("href", uri);
+
+  return false;
 }
