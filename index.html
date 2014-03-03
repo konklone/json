@@ -29,29 +29,67 @@
 <script src="assets/highlight.pack.js"></script>
 
 <script>
-  $(function() {
-    // transform on paste/edit
-    // $(".json button").click(update);
-    $(".json textarea").keyup(function() {
-      var input = $(".json textarea").val();
-      var json = jsonFrom(input);
-      var csv = json2csv(json);
+  var input;
+  var url;
 
-      // if succeeded, copy to <code> block
-      var pretty = JSON.stringify(json, undefined, 2);
-      $(".json code").html(pretty);
-      hljs.highlightBlock($(".json code").get(0));
+  function loadJSON() {
+    var newUrl = $(".json input").val();
+    if (!newUrl || (newUrl == url)) return;
+    url = newUrl;
 
-      update(csv);
+    $.get(url, function() {
 
-      return true;
     });
+  }
+
+  function doJSON() {
+    // get input JSON, try to parse it
+    var newInput = $(".json textarea").val();
+    if (!newInput || (newInput == input)) return;
+    input = newInput;
+
+    var json = jsonFrom(input);
+
+    // if succeeded, prettify and highlight it
+    // var pretty = JSON.stringify(json, undefined, 2);
+    // $(".json code").html(pretty);
+    // hljs.highlightBlock($(".json code").get(0));
+
+    // show button to show rendered
+    // $(".json button").show();
+
+    // convert to CSV, make available
+    var csv = json2csv(json);
+    doCSV(csv);
+
+    return true;
+  }
+
+  function doCSV(csv) {
+    // thanks to http://jsfiddle.net/terryyounghk/KPEGU/
+    // and http://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side
+    var uri = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+
+    $(".csv").removeClass("nothing");
+    $(".csv textarea").val(csv);
+    $(".csv a.download").attr("href", uri);
+  }
+
+  $(function() {
+
+    $(".json button").click(function() {
+      $(".json textarea").toggle();
+      $(".json pre").toggle();
+    });
+
+    // transform on paste/edit
+    $(".json textarea").keyup(doJSON);
 
     // when pasting a URL in, resize box and kick off fetch
 
 
     $(".csv textarea").click(function() {
-        this.focus(); this.select();
+      this.focus(); this.select();
     });
   });
 </script>
@@ -71,9 +109,11 @@
     <!-- <a class="help">Not coming out the way you were hoping?</a> -->
   </p>
 
-  <textarea></textarea>
-
-  <pre><code></code></pre>
+  <div class="areas">
+    <textarea></textarea>
+    <pre><code></code></pre>
+    <button>Button</button>
+  </div>
 </section>
 
 <section class="csv nothing">
@@ -82,7 +122,9 @@
     Copy the below CSV somewhere, or <a download="result.csv" href="#" class="download">download it as a file</a>.
   </p>
 
-  <textarea></textarea>
+  <div class="areas">
+    <textarea></textarea>
+  </div>
 </section>
 
 <footer>
