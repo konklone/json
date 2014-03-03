@@ -46,7 +46,7 @@ function arrayFrom(json, key) {
                 return json[key];
         }
 
-        // none found
+        // none found, consider the whole object a row
         return [json];
     }
 }
@@ -64,6 +64,7 @@ function json2csv(json) {
     return $.csv.fromObjects(outArray);
 }
 
+// todo: add graceful error handling
 function jsonFrom(input) {
   var string = $.trim(input);
   if (!string) return;

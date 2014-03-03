@@ -9,7 +9,10 @@ span.warning {color: #888;}
 /*.json #url {width: 100px;}*/
 
 .json textarea,
-.json code {width: 90%; height: 20em;}
+.json pre {width: 90%; height: 20em;}
+
+.json pre {display: none;}
+
 .csv textarea {width: 90%; height: 10em;}
 
 .csv {
