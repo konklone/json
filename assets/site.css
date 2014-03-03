@@ -6,7 +6,10 @@ h1 {
 
 span.warning {color: #888;}
 
-.json textarea {width: 90%; height: 20em;}
+/*.json #url {width: 100px;}*/
+
+.json textarea,
+.json code {width: 90%; height: 20em;}
 .csv textarea {width: 90%; height: 10em;}
 
 .csv {

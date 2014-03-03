@@ -64,20 +64,13 @@ function json2csv(json) {
     return $.csv.fromObjects(outArray);
 }
 
-function update() {
-  var string = $.trim($(".json textarea").val());
+function jsonFrom(input) {
+  var string = $.trim(input);
   if (!string) return;
+  return JSON.parse(string);
+}
 
-  var json;
-  try {
-      json = JSON.parse(string);
-  } catch(err) {
-      console.log("Error with JSON.parse, trying eval: " + err);
-      json = eval("(" + string + ")");
-  }
-
-  var csv = json2csv(json);
-
+function update(csv) {
   // now, make a data: URI out of it
   // thanks to http://jsfiddle.net/terryyounghk/KPEGU/
   // and http://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side
@@ -86,6 +79,4 @@ function update() {
   $(".csv").removeClass("nothing");
   $(".csv textarea").val(csv);
   $(".csv a.download").attr("href", uri);
-
-  return false;
 }

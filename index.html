@@ -16,8 +16,8 @@
 <link rel="shortcut icon" href="/favicon.png" />
 
 <!-- jquery and jquery-csv -->
-<script type='text/javascript' src='https://code.jquery.com/jquery-1.10.2.min.js'></script>
-<script src="https://jquery-csv.googlecode.com/git/src/jquery.csv.js"></script>
+<script type='text/javascript' src='assets/jquery-1.10.2.min.js'></script>
+<script src="assets/jquery.csv.js"></script>
 
 <!-- bootstrap base -->
 <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
@@ -25,16 +25,36 @@
 
 <!-- site styles and JS -->
 <link href="assets/site.css" type="text/css" rel="stylesheet" />
+<link href="assets/github.css" type="text/css" rel="stylesheet" />
 <script src="assets/site.js"></script>
+<script src="assets/highlight.pack.js"></script>
 
 <!-- google spreadsheets integration -->
-<script type="text/javascript" src="https://apis.google.com/js/client.js"></script>
-<script type="text/javascript" src="assets/google.js"></script>
+<!-- <script type="text/javascript" src="https://apis.google.com/js/client.js"></script>
+<script type="text/javascript" src="assets/google.js"></script> -->
 
 <script>
   $(function() {
-    // transform functions
-    $(".json button").click(update);
+    // transform on paste/edit
+    // $(".json button").click(update);
+    $(".json textarea").keyup(function() {
+      var input = $(".json textarea").val();
+      var json = jsonFrom(input);
+      var csv = json2csv(json);
+
+      // if succeeded, copy to <code> block
+      var pretty = JSON.stringify(json, undefined, 2);
+      $(".json code").html(pretty);
+      hljs.highlightBlock($(".json code").get(0));
+
+      update(csv);
+
+      return true;
+    });
+
+    // when pasting a URL in, resize box and kick off fetch
+
+
     $(".csv textarea").click(function() {
         this.focus(); this.select();
     });
@@ -52,12 +72,16 @@
 <section class="json">
 
   <p>
-    Paste your JSON below and press <button>Go</button>. <span class="warning">Very large files may cause trouble &mdash; the conversion is done inside your browser.</span>
+    Paste your JSON below.
+    <!-- or <input type="text" id="url" placeholder="paste a URL." size="12" /> -->
+    <span class="warning">Very large files may cause trouble &mdash; the conversion is done inside your browser.</span>
 
     <!-- <a class="help">Not coming out the way you were hoping?</a> -->
   </p>
 
   <textarea></textarea>
+
+  <pre style="display: none"><code></code></pre>
 </section>
 
 <section class="csv nothing">
