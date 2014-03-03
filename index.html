@@ -32,6 +32,7 @@
   var input;
   var url;
 
+  // not done: loading JSON remotely
   function loadJSON() {
     var newUrl = $(".json input").val();
     if (!newUrl || (newUrl == url)) return;
@@ -50,6 +51,7 @@
 
     var json = jsonFrom(input);
 
+    // hidden for now:
     // if succeeded, prettify and highlight it
     // var pretty = JSON.stringify(json, undefined, 2);
     // $(".json code").html(pretty);
@@ -75,18 +77,28 @@
     $(".csv a.download").attr("href", uri);
   }
 
+  // loads original pasted JSON from
+  function saveJSON() {
+
+  }
+
   $(function() {
 
+    // toggle rendered/raw JSON (hidden for now)
     $(".json button").click(function() {
       $(".json textarea").toggle();
       $(".json pre").toggle();
     });
 
+    // if there's no CSV to download, don't download anything
+    $(".csv a.download").click(function() {
+      return !!$(".csv textarea").val();
+    });
+
     // transform on paste/edit
     $(".json textarea").keyup(doJSON);
 
-    // when pasting a URL in, resize box and kick off fetch
-
+    //
 
     $(".csv textarea").click(function() {
       this.focus(); this.select();
@@ -120,10 +132,15 @@
 
   <p>
     Copy the below CSV somewhere, or <a download="result.csv" href="#" class="download">download it as a file</a>.
+
+    <span class="permalink">
+      You can also <a href="#" class="save">create a permalink</a>.
+      <span class="link"></span>
+    </span>
   </p>
 
   <div class="areas">
-    <textarea></textarea>
+    <textarea readonly></textarea>
   </div>
 </section>
 
