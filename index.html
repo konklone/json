@@ -15,11 +15,10 @@
 
 <link rel="shortcut icon" href="/favicon.png" />
 
-<!-- jquery and jquery-csv -->
+
+<!-- jquery, jquery-csv,bootstrap -->
 <script type='text/javascript' src='assets/jquery-1.10.2.min.js'></script>
 <script src="assets/jquery.csv.js"></script>
-
-<!-- bootstrap base -->
 <link href="assets/bootstrap.min.css" type="text/css" rel="stylesheet" />
 
 
@@ -28,10 +27,6 @@
 <link href="assets/github.css" type="text/css" rel="stylesheet" />
 <script src="assets/site.js"></script>
 <script src="assets/highlight.pack.js"></script>
-
-<!-- google spreadsheets integration -->
-<!-- <script type="text/javascript" src="https://apis.google.com/js/client.js"></script>
-<script type="text/javascript" src="assets/google.js"></script> -->
 
 <script>
   $(function() {
@@ -58,9 +53,6 @@
     $(".csv textarea").click(function() {
         this.focus(); this.select();
     });
-
-    // Google link
-    // $("a.google").click(Google.checkAuth);
   });
 </script>
 
@@ -88,7 +80,6 @@
 
   <p>
     Copy the below CSV somewhere, or <a download="result.csv" href="#" class="download">download it as a file</a>.
-    <!--  or <a class="google" href="#">open it in Google Spreadsheets</a>. -->
   </p>
 
   <textarea></textarea>
