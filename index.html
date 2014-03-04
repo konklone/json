@@ -31,6 +31,15 @@
 <script>
   var input;
   var url;
+  var lastSaved;
+
+  function log(msg) {
+    return $(".console").removeClass("error").html(msg);
+  }
+
+  function error(msg) {
+    return log(msg).addClass("error");
+  }
 
   // not done: loading JSON remotely
   function loadJSON() {
@@ -77,9 +86,78 @@
     $(".csv a.download").attr("href", uri);
   }
 
-  // loads original pasted JSON from
+  // loads original pasted JSON from textarea, saves to anonymous gist
+  // rate-limiting means this could easily fail with a 403.
   function saveJSON() {
+    if (!input) return false;
+    if (input == lastSaved) return false;
 
+    // save a permalink to an anonymous gist
+    var gist = {
+      description: "test",
+      public: true,
+      files: {
+        "source.json": {
+            "content": input
+        }
+      }
+    };
+
+    // TODO: show spinner/msg while this happens
+
+    console.log("Saving to an anonymous gist...");
+    $.post(
+      'https://api.github.com/gists',
+      JSON.stringify(gist)
+    ).done(function(data, status, xhr) {
+
+      // take new Gist id, make permalink
+      setPermalink(data.id);
+
+      // mark what we last saved
+      lastSaved = input;
+
+      console.log("Remaining this hour: " + xhr.getResponseHeader("X-RateLimit-Remaining"));
+
+    }).fail(function(xhr, status, errorThrown) {
+      console.log(xhr);
+      // TODO: gracefully handle rate limit errors
+      // if (status == 403)
+
+      // TODO: show when saving will be available
+      // e.g. "try again in 5 minutes"
+      // var reset = xhr.getResponseHeader("X-RateLimit-Reset");
+      // var date = new Date();
+      // date.setTime(parseInt(reset) * 1000);
+      // use http://momentjs.com/ to say "in _ minutes"
+
+    });
+
+    return false;
+  }
+
+  // given a valid gist ID, set the permalink to use it
+  function setPermalink(id) {
+    if (history && history.pushState)
+      history.pushState({id: id}, null, "?id=" + id);
+
+    log("Permalink created! (Copy from the location bar.)")
+  }
+
+  // check query string for gist ID
+  function loadPermalink() {
+    var id = getParam("id");
+    if (!id) return;
+
+    $.get('https://api.github.com/gists/' + id, function(data, status, xhr) {
+      console.log("Remaining this hour: " + xhr.getResponseHeader("X-RateLimit-Remaining"));
+
+      var input = data.files["source.json"].content;
+      $(".json textarea").val(input);
+      doJSON();
+    }).fail(function(xhr, status, errorThrown) {
+      console.log("Error fetching anonymous gist!");
+    });
   }
 
   $(function() {
@@ -95,14 +173,17 @@
       return !!$(".csv textarea").val();
     });
 
-    // transform on paste/edit
+    $(".save a").click(saveJSON);
+
+    // transform the JSON whenever it's pasted/edited
     $(".json textarea").keyup(doJSON);
 
-    //
-
+    // highlight CSV on click
     $(".csv textarea").click(function() {
       this.focus(); this.select();
     });
+
+    loadPermalink();
   });
 </script>
 
@@ -111,14 +192,16 @@
 
 <h1>Convert JSON to CSV</h1>
 
+<div class="console">&nbsp;</div>
+
 <section class="json">
 
   <p>
     Paste your JSON below.
-    <!-- or <input type="text" id="url" placeholder="paste a URL." size="12" /> -->
-    <span class="warning">Very large files may cause trouble &mdash; the conversion is done inside your browser.</span>
 
-    <!-- <a class="help">Not coming out the way you were hoping?</a> -->
+    <span class="save">
+      <a href="#">Create a permalink</a> any time.
+    </span>
   </p>
 
   <div class="areas">
@@ -126,17 +209,16 @@
     <pre><code></code></pre>
     <button>Button</button>
   </div>
+
+  <div class="warning">
+    Very large files may cause trouble &mdash; the conversion is done inside your browser.
+  </div>
 </section>
 
 <section class="csv nothing">
 
   <p>
     Copy the below CSV somewhere, or <a download="result.csv" href="#" class="download">download it as a file</a>.
-
-    <span class="permalink">
-      You can also <a href="#" class="save">create a permalink</a>.
-      <span class="link"></span>
-    </span>
   </p>
 
   <div class="areas">

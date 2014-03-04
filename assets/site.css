@@ -4,9 +4,12 @@ h1 {
   margin-bottom: 10px;
 }
 
-span.warning {color: #888;}
-
-/*.json #url {width: 100px;}*/
+.console {
+  margin-bottom: 10px;
+  font-size: 80%;
+  display: none;
+} .console.in-use {background: #f5f5f5;}
+.console.error {color: #d00;}
 
 .areas {position: relative; width: 90%; height: 15em;}
 
@@ -27,6 +30,8 @@ span.warning {color: #888;}
 .json pre {display: none;}
 .json .areas button {display: none;}
 
+.json .warning {margin-top: 5px; color: #888;}
+.json .permalink {display: none;}
 
 .csv {
   color: black;

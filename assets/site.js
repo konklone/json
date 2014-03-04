@@ -1,3 +1,10 @@
+function getParam(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
 // adapted from csvkit's recursive JSON flattening mechanism:
 // https://github.com/onyxfish/csvkit/blob/master/csvkit/convert/js.py#L8-L27
 
