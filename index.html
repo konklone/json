@@ -149,14 +149,19 @@
     var id = getParam("id");
     if (!id) return;
 
-    $.get('https://api.github.com/gists/' + id, function(data, status, xhr) {
-      console.log("Remaining this hour: " + xhr.getResponseHeader("X-RateLimit-Remaining"));
+    $.get('https://api.github.com/gists/' + id,
+      function(data, status, xhr) {
+        console.log("Remaining this hour: " + xhr.getResponseHeader("X-RateLimit-Remaining"));
 
-      var input = data.files["source.json"].content;
-      $(".json textarea").val(input);
-      doJSON();
-    }).fail(function(xhr, status, errorThrown) {
+        var input = data.files["source.json"].content;
+        $(".json textarea").val(input);
+        doJSON();
+      }
+    ).fail(function(xhr, status, errorThrown) {
       console.log("Error fetching anonymous gist!");
+      console.log(xhr);
+      console.log(status);
+      console.log(errorThrown);
     });
   }
 
