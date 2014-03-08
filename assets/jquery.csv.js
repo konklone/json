@@ -110,7 +110,7 @@ RegExp.escape= function(s) {
             options.state.colNum = 1;
             return;
           }
-          
+
           if(options.onParseEntry === undefined) {
             // onParseEntry hook not set
             data.push(entry);
@@ -122,7 +122,7 @@ RegExp.escape= function(s) {
             }
           }
           //console.log('entry:' + entry);
-          
+
           // cleanup
           entry = [];
 
@@ -130,7 +130,7 @@ RegExp.escape= function(s) {
           if(options.end && options.state.rowNum >= options.end) {
             exit = true;
           }
-          
+
           // update global state
           options.state.rowNum++;
           options.state.colNum = 1;
@@ -284,10 +284,10 @@ RegExp.escape= function(s) {
         var entry = '';
         var exit = false;
 
-        function endOfLine() {          
+        function endOfLine() {
           // reset the state
           state = 0;
-          
+
           // if 'start' hasn't been met, don't output
           if(options.start && options.state.rowNum < options.start) {
             // update global state
@@ -295,7 +295,7 @@ RegExp.escape= function(s) {
             options.state.rowNum++;
             return;
           }
-          
+
           if(options.onParseEntry === undefined) {
             // onParseEntry hook not set
             entries.push(entry);
@@ -314,7 +314,7 @@ RegExp.escape= function(s) {
           if(options.end && options.state.rowNum >= options.end) {
             exit = true;
           }
-          
+
           // update global state
           options.state.rowNum++;
         }
@@ -329,7 +329,7 @@ RegExp.escape= function(s) {
         matchSrc = matchSrc.replace(/S/g, escSeparator);
         matchSrc = matchSrc.replace(/D/g, escDelimiter);
         match = RegExp(matchSrc, 'gm');
-        
+
         // put on your fancy pants...
         // process control chars individually, use look-ahead on non-control chars
         csv.replace(match, function (m0) {
@@ -449,7 +449,7 @@ RegExp.escape= function(s) {
         // cache settings
         var separator = options.separator;
         var delimiter = options.delimiter;
-        
+
         // set initial state if it's missing
         if(!options.state.rowNum) {
           options.state.rowNum = 1;
@@ -486,7 +486,7 @@ RegExp.escape= function(s) {
           // escape regex-specific control chars
           var escSeparator = RegExp.escape(separator);
           var escDelimiter = RegExp.escape(delimiter);
-          
+
           // compile the regEx str using the custom delimiter/separator
           var match = /(D|S|\n|\r|[^DS\r\n]+)/;
           var matchSrc = match.source;
@@ -671,7 +671,7 @@ RegExp.escape= function(s) {
       config.callback = ((callback !== undefined && typeof(callback) === 'function') ? callback : false);
       config.separator = 'separator' in options ? options.separator : $.csv.defaults.separator;
       config.delimiter = 'delimiter' in options ? options.delimiter : $.csv.defaults.delimiter;
-      
+
       // setup
       var data = [];
       var options = {
@@ -730,7 +730,7 @@ RegExp.escape= function(s) {
       config.delimiter = 'delimiter' in options ? options.delimiter : $.csv.defaults.delimiter;
       config.headers = 'headers' in options ? options.headers : $.csv.defaults.headers;
       options.start = 'start' in options ? options.start : 1;
-      
+
       // account for headers
       if(config.headers) {
         options.start++;
@@ -738,11 +738,11 @@ RegExp.escape= function(s) {
       if(options.end && config.headers) {
         options.end++;
       }
-      
+
       // setup
       var lines = [];
       var data = [];
-      
+
       var options = {
         delimiter: config.delimiter,
         separator: config.separator,
@@ -783,7 +783,7 @@ RegExp.escape= function(s) {
 
       // fetch the data
       var lines = $.csv.parsers.splitLines(csv, options);
-      
+
       // reset the state for re-use
       options.state.colNum = 1;
       if(headers){
@@ -791,7 +791,7 @@ RegExp.escape= function(s) {
       } else {
         options.state.rowNum = 1;
       }
-      
+
       // convert data to objects
       for(var i=0, len=lines.length; i<len; i++) {
         var entry = $.csv.toArray(lines[i], options);
@@ -804,7 +804,7 @@ RegExp.escape= function(s) {
         } else {
           data.push(object);
         }
-        
+
         // update row state
         options.state.rowNum++;
       }
@@ -852,8 +852,13 @@ RegExp.escape= function(s) {
           var strValue = (line[j] === undefined || line[j] === null)
                        ? ''
                        : line[j].toString();
+
+          // MODIFICATION by Eric:
+          // make the delimiter replacement global
+          // (workaround until jquery-csv is replaced entirely)
           if (strValue.indexOf(config.delimiter) > -1) {
-            strValue = strValue.replace(config.delimiter, config.delimiter + config.delimiter);
+            var delRegex = new RegExp(config.delimiter, "g");
+            strValue = strValue.replace(delRegex, config.delimiter + config.delimiter);
           }
 
           var escMatcher = '\n|\r|S|D';
