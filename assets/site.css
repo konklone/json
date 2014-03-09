@@ -23,8 +23,7 @@ h1 {
   position: absolute;
 }
 .csv .table {overflow-x: scroll;}
-.json pre,
-.csv table {cursor: pointer;}
+.json pre {cursor: pointer;}
 
 
 /* show empty textarea by default */

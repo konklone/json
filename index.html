@@ -250,7 +250,11 @@
     $(".json textarea").blur(function() {showJSON(true);});
     $(".json pre").click(function() {showJSON(false)});
     $(".csv textarea").blur(function() {showCSV(true);})
-    $(".csv table").click(function() {showCSV(false);})
+    $(".csv .raw").click(function() {
+      showCSV(false);
+      $(".csv textarea").focus().select();
+      return false;
+    })
 
     // if there's no CSV to download, don't download anything
     $(".csv a.download").click(function() {
@@ -272,9 +276,7 @@
       .keyup(doJSON); // harmless to repeat doJSON
 
     // highlight CSV on click
-    $(".csv textarea").click(function() {
-      this.focus(); this.select();
-    });
+    $(".csv textarea").click(function() {this.focus().select();});
 
     loadPermalink();
   });
@@ -320,7 +322,7 @@
       <a download="result.csv" href="#" class="download">
         Download the entire CSV</a>,
 
-      or click below for the raw data.
+      or <a href="#" class="raw">show the raw data</a>.
     </span>
 
     <span class="editing">
