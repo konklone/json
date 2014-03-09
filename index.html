@@ -34,13 +34,13 @@
   var url;
   var lastSaved;
 
-  function log(msg) {
-    return $(".console").removeClass("error").html(msg);
-  }
+  // function log(msg) {
+  //   return $(".console").removeClass("error").html(msg);
+  // }
 
-  function error(msg) {
-    return log(msg).addClass("error");
-  }
+  // function error(msg) {
+  //   return log(msg).addClass("error");
+  // }
 
   function doJSON() {
     // get input JSON, try to parse it
@@ -53,6 +53,8 @@
       $(".json code").html("");
       return;
     }
+
+    console.log("ordered to parse JSON...");
 
     var json = jsonFrom(input);
 
@@ -73,8 +75,10 @@
 
   // show rendered JSON
   function showJSON(rendered) {
+    console.log("ordered to show JSON: " + rendered);
     if (rendered) {
       if ($(".json code").html()) {
+        console.log("there's code to show, showing...");
         $(".json .rendered").show();
         $(".json .editing").hide();
       }
@@ -151,11 +155,13 @@
     renderCSV(outArray.slice(0, excerptRows));
     showCSV(true);
 
+    // show raw data if people really want it
+    $(".csv textarea").val(csv);
+
+    // download link to entire CSV as data
     // thanks to http://jsfiddle.net/terryyounghk/KPEGU/
     // and http://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side
     var uri = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
-
-    $(".csv textarea").val(csv);
     $(".csv a.download").attr("href", uri);
   }
 
@@ -214,7 +220,7 @@
     if (history && history.pushState)
       history.pushState({id: id}, null, "?id=" + id);
 
-    log("Permalink created! (Copy from the location bar.)")
+    // log("Permalink created! (Copy from the location bar.)")
   }
 
   // check query string for gist ID
@@ -254,7 +260,16 @@
     $(".save a").click(saveJSON);
 
     // transform the JSON whenever it's pasted/edited
-    $(".json textarea").keyup(doJSON);
+    $(".json textarea")
+      .on('paste', function() {
+        // delay the showing so the paste is pasted by then
+        setTimeout(function() {
+          doJSON();
+          // showJSON(true);
+          $(".json textarea").blur();
+        }, 1);
+      })
+      .keyup(doJSON); // harmless to repeat doJSON
 
     // highlight CSV on click
     $(".csv textarea").click(function() {
