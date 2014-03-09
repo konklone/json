@@ -44,8 +44,14 @@
   function doJSON() {
     // get input JSON, try to parse it
     var newInput = $(".json textarea").val();
-    if (!newInput || (newInput == input)) return;
+    if (newInput == input) return;
+
     input = newInput;
+    if (!input) {
+      // wipe the rendered version too
+      $(".json code").html("");
+      return;
+    }
 
     var json = jsonFrom(input);
 
@@ -75,6 +81,18 @@
     } else {
       $(".json .rendered").hide();
       $(".json .editing").show().focus();
+    }
+  }
+
+  function showCSV(rendered) {
+    if (rendered) {
+      if ($(".csv table").html()) {
+        $(".csv .rendered").show();
+        $(".csv .editing").hide();
+      }
+    } else {
+      $(".csv .rendered").hide();
+      $(".csv .editing").show().focus();
     }
   }
 
@@ -232,11 +250,17 @@
 <section class="csv nothing">
 
   <p>
-    Copy the below CSV somewhere, or <a download="result.csv" href="#" class="download">download it as a file</a>.
+    <a download="result.csv" href="#" class="download">
+      Download as a CSV</a>.
+
+    <span class="rendered">
+      <!-- Click the table below for the raw data. -->
+    </span>
   </p>
 
   <div class="areas">
-    <textarea readonly></textarea>
+    <textarea class="editing" readonly></textarea>
+    <table class="rendered"></table>
   </div>
 </section>
 
