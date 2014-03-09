@@ -58,19 +58,6 @@ function arrayFrom(json, key) {
     }
 }
 
-// 1) find the primary array to iterate over
-// 2) for each item in that array, recursively flatten it into a tabular object
-// 3) turn that tabular object into a CSV row using jquery-csv
-function json2csv(json) {
-    var inArray = arrayFrom(json);
-
-    var outArray = [];
-    for (var row in inArray)
-        outArray[outArray.length] = parse_object(inArray[row]);
-
-    return $.csv.fromObjects(outArray);
-}
-
 // todo: add graceful error handling
 function jsonFrom(input) {
   var string = $.trim(input);

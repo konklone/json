@@ -29,6 +29,7 @@
 <script src="assets/highlight.pack.js"></script>
 
 <script>
+  var excerptRows = 7;
   var input;
   var url;
   var lastSaved;
@@ -65,8 +66,7 @@
       $(".json code").html("");
 
     // convert to CSV, make available
-    var csv = json2csv(json);
-    doCSV(csv);
+    doCSV(json);
 
     return true;
   }
@@ -96,12 +96,64 @@
     }
   }
 
-  function doCSV(csv) {
+  // takes an array of flat JSON objects, converts them to arrays
+  // renders them into a small table as an example
+  function renderCSV(objects) {
+    var rows = $.csv.fromObjects(objects, {justArrays: true});
+    if (rows.length < 1) return;
+
+    // find CSV table
+    var table = $(".csv table")[0];
+
+    // render header row
+    var thead = document.createElement("thead");
+    var tr = document.createElement("tr");
+    var header = rows[0];
+    for (field in header) {
+      var th = document.createElement("th");
+      $(th).html(header[field])
+      tr.appendChild(th);
+    }
+    thead.appendChild(tr);
+
+    // render body of table
+    var tbody = document.createElement("tbody");
+    for (var i=1; i<rows.length; i++) {
+      tr = document.createElement("tr");
+      for (field in rows[i]) {
+        var td = document.createElement("td");
+        $(td)
+          .html(rows[i][field])
+          .attr("title", rows[i][field]);
+        tr.appendChild(td);
+      }
+      tbody.appendChild(tr);
+    }
+
+    table.appendChild(thead);
+    table.appendChild(tbody);
+  }
+
+  function doCSV(json) {
+    // 1) find the primary array to iterate over
+    // 2) for each item in that array, recursively flatten it into a tabular object
+    // 3) turn that tabular object into a CSV row using jquery-csv
+    var inArray = arrayFrom(json);
+
+    var outArray = [];
+    for (var row in inArray)
+        outArray[outArray.length] = parse_object(inArray[row]);
+
+    var csv = $.csv.fromObjects(outArray);
+
+    // excerpt and render first 10 rows
+    renderCSV(outArray.slice(0, excerptRows));
+    showCSV(true);
+
     // thanks to http://jsfiddle.net/terryyounghk/KPEGU/
     // and http://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side
     var uri = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
 
-    $(".csv").removeClass("nothing");
     $(".csv textarea").val(csv);
     $(".csv a.download").attr("href", uri);
   }
@@ -188,12 +240,10 @@
 
   $(function() {
 
-    // toggle rendered/raw JSON (hidden for now)
-    // $(".json button").click(function() {
-    // });
-
-    $(".json textarea").blur(function() {showJSON(true)});
+    $(".json textarea").blur(function() {showJSON(true);});
     $(".json pre").click(function() {showJSON(false)});
+    $(".csv textarea").blur(function() {showCSV(true);})
+    $(".csv table").click(function() {showCSV(false);})
 
     // if there's no CSV to download, don't download anything
     $(".csv a.download").click(function() {
@@ -218,8 +268,6 @@
 <body>
 
 <h1>Convert JSON to CSV</h1>
-
-<div class="console">&nbsp;</div>
 
 <section class="json">
 
@@ -247,20 +295,28 @@
   </div>
 </section>
 
-<section class="csv nothing">
+<section class="csv">
 
   <p>
-    <a download="result.csv" href="#" class="download">
-      Download as a CSV</a>.
-
     <span class="rendered">
-      <!-- Click the table below for the raw data. -->
+      Below are the first few rows.
+
+      <a download="result.csv" href="#" class="download">
+        Download the entire CSV</a>,
+
+      or click below for the raw data.
+    </span>
+
+    <span class="editing">
+      Your CSV will appear below.
     </span>
   </p>
 
   <div class="areas">
     <textarea class="editing" readonly></textarea>
-    <table class="rendered"></table>
+    <div class="table rendered">
+      <table></table>
+    </div>
   </div>
 </section>
 

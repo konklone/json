@@ -914,6 +914,9 @@ RegExp.escape= function(s) {
       config.manualOrder = 'manualOrder' in options ? options.manualOrder : [];
       config.transform = options.transform;
 
+      // added by ERIC, return just the arrays
+      config.justArrays = 'justArrays' in options ? options.justArrays : false;
+
       if (typeof config.manualOrder === 'string') {
         config.manualOrder = $.csv.toArray(config.manualOrder, config);
       }
@@ -963,6 +966,10 @@ RegExp.escape= function(s) {
         }
         output.push(line);
       }
+
+      // modification by ERIC - just give me the arrays you made out of the object
+      if (config.justArrays)
+        return output;
 
       // push the value to a callback if one is defined
       return $.csv.fromArrays(output, options, config.callback);
