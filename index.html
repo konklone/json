@@ -41,17 +41,6 @@
     return log(msg).addClass("error");
   }
 
-  // not done: loading JSON remotely
-  function loadJSON() {
-    var newUrl = $(".json input").val();
-    if (!newUrl || (newUrl == url)) return;
-    url = newUrl;
-
-    $.get(url, function() {
-
-    });
-  }
-
   function doJSON() {
     // get input JSON, try to parse it
     var newInput = $(".json textarea").val();
@@ -60,20 +49,33 @@
 
     var json = jsonFrom(input);
 
-    // hidden for now:
     // if succeeded, prettify and highlight it
-    // var pretty = JSON.stringify(json, undefined, 2);
-    // $(".json code").html(pretty);
-    // hljs.highlightBlock($(".json code").get(0));
-
-    // show button to show rendered
-    // $(".json button").show();
+    // highlight shows when textarea loses focus
+    if (json) {
+      var pretty = JSON.stringify(json, undefined, 2);
+      $(".json code").html(pretty);
+      hljs.highlightBlock($(".json code").get(0));
+    } else
+      $(".json code").html("");
 
     // convert to CSV, make available
     var csv = json2csv(json);
     doCSV(csv);
 
     return true;
+  }
+
+  // show rendered JSON
+  function showJSON(rendered) {
+    if (rendered) {
+      if ($(".json pre code").html()) {
+        $(".json pre, .json .rendered").show();
+        $(".json textarea, .json .editing").hide();
+      }
+    } else {
+      $(".json pre, .json .rendered").hide();
+      $(".json textarea, .json .editing").show().focus();
+    }
   }
 
   function doCSV(csv) {
@@ -156,6 +158,7 @@
         var input = data.files["source.json"].content;
         $(".json textarea").val(input);
         doJSON();
+        showJSON(true);
       }
     ).fail(function(xhr, status, errorThrown) {
       console.log("Error fetching anonymous gist!");
@@ -168,10 +171,11 @@
   $(function() {
 
     // toggle rendered/raw JSON (hidden for now)
-    $(".json button").click(function() {
-      $(".json textarea").toggle();
-      $(".json pre").toggle();
-    });
+    // $(".json button").click(function() {
+    // });
+
+    $(".json textarea").blur(function() {showJSON(true)});
+    $(".json pre").click(function() {showJSON(false)});
 
     // if there's no CSV to download, don't download anything
     $(".csv a.download").click(function() {
@@ -202,7 +206,13 @@
 <section class="json">
 
   <p>
-    Paste your JSON below.
+    <span class="instruction editing">
+      Paste your JSON below.
+    </span>
+
+    <span class="instruction rendered">
+      Click below to edit your JSON.
+    </span>
 
     <span class="save">
       <a href="#">Create a permalink</a> any time.
@@ -212,7 +222,6 @@
   <div class="areas">
     <textarea></textarea>
     <pre><code></code></pre>
-    <button>Button</button>
   </div>
 
   <div class="warning">
