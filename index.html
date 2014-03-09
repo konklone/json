@@ -68,13 +68,13 @@
   // show rendered JSON
   function showJSON(rendered) {
     if (rendered) {
-      if ($(".json pre code").html()) {
-        $(".json pre, .json .rendered").show();
-        $(".json textarea, .json .editing").hide();
+      if ($(".json code").html()) {
+        $(".json .rendered").show();
+        $(".json .editing").hide();
       }
     } else {
-      $(".json pre, .json .rendered").hide();
-      $(".json textarea, .json .editing").show().focus();
+      $(".json .rendered").hide();
+      $(".json .editing").show().focus();
     }
   }
 
@@ -220,8 +220,8 @@
   </p>
 
   <div class="areas">
-    <textarea></textarea>
-    <pre><code></code></pre>
+    <textarea class="editing"></textarea>
+    <pre class="rendered"><code></code></pre>
   </div>
 
   <div class="warning">
