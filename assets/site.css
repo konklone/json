@@ -68,3 +68,6 @@ footer p {
   border-top: 1px solid #888;
   padding-top: 5px;
 }
+
+/* harmonize bootstrap and highlightjs background colors */
+.hljs {background-color: #f5f5f5 !important;}
