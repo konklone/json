@@ -149,8 +149,9 @@
     for (var row in inArray)
         outArray[outArray.length] = parse_object(inArray[row]);
 
-    var csv = $.csv.fromObjects(outArray);
+    $("span.rows.count").text("" + outArray.length);
 
+    var csv = $.csv.fromObjects(outArray);
     // excerpt and render first 10 rows
     renderCSV(outArray.slice(0, excerptRows));
     showCSV(true);
@@ -301,6 +302,10 @@
     <span class="save">
       <a href="#">Create a permalink</a> any time.
     </span>
+
+    <span>
+      (Made by <a href="https://twitter.com/konklone">@konklone.</a> Star it <a href="https://github.com/konklone/json">on GitHub</a>.)
+    </span>
   </p>
 
   <div class="areas">
@@ -317,7 +322,7 @@
 
   <p>
     <span class="rendered">
-      Below are the first few rows.
+      Below are the first few rows (<span class="rows count"></span> total).
 
       <a download="result.csv" href="#" class="download">
         Download the entire CSV</a>,
@@ -340,11 +345,7 @@
 
 <footer>
 <p>
-  Code on <a href="https://github.com/konklone/json">Github</a>, please <a href="https://github.com/konklone/json/issues">report bugs and suggest improvements</a>.
-
-  <br/>
-
-  Made by <a href="https://twitter.com/konklone">@konklone</a>. Help from <a href="https://twitter.com/benbalter">@benbalter</a> and <a href="https://github.com/onyxfish/csvkit/blob/master/csvkit/convert/js.py#L8-L27">code inspiration</a> from <a href="https://twitter.com/onyxfish">@onyxfish</a>'s <a href="http://csvkit.readthedocs.org/en/latest/scripts/in2csv.html">csvkit</a>.
+  Please <a href="https://github.com/konklone/json/issues">report bugs and suggest improvements</a>. Made with help from <a href="https://twitter.com/benbalter">@benbalter</a> and <a href="https://github.com/onyxfish/csvkit/blob/master/csvkit/convert/js.py#L8-L27">code inspiration</a> from <a href="https://twitter.com/onyxfish">@onyxfish</a>'s <a href="http://csvkit.readthedocs.org/en/latest/scripts/in2csv.html">csvkit</a>.
 </p>
 </footer>
 
