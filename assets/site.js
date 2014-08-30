@@ -1,3 +1,10 @@
+function getParam(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
 // adapted from csvkit's recursive JSON flattening mechanism:
 // https://github.com/onyxfish/csvkit/blob/master/csvkit/convert/js.py#L8-L27
 
@@ -46,46 +53,14 @@ function arrayFrom(json, key) {
                 return json[key];
         }
 
-        // none found
+        // none found, consider the whole object a row
         return [json];
     }
 }
 
-// 1) find the primary array to iterate over
-// 2) for each item in that array, recursively flatten it into a tabular object
-// 3) turn that tabular object into a CSV row using jquery-csv
-function json2csv(json) {
-    var inArray = arrayFrom(json);
-
-    var outArray = [];
-    for (var row in inArray)
-        outArray[outArray.length] = parse_object(inArray[row]);
-
-    return $.csv.fromObjects(outArray);
-}
-
-function update() {
-  var string = $.trim($(".json textarea").val());
+// todo: add graceful error handling
+function jsonFrom(input) {
+  var string = $.trim(input);
   if (!string) return;
-
-  var json;
-  try {
-      json = JSON.parse(string);
-  } catch(err) {
-      console.log("Error with JSON.parse, trying eval: " + err);
-      json = eval("(" + string + ")");
-  }
-
-  var csv = json2csv(json);
-
-  // now, make a data: URI out of it
-  // thanks to http://jsfiddle.net/terryyounghk/KPEGU/
-  // and http://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side
-  var uri = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
-
-  $(".csv").removeClass("nothing");
-  $(".csv textarea").val(csv);
-  $(".csv a.download").attr("href", uri);
-
-  return false;
+  return JSON.parse(string);
 }
