@@ -276,6 +276,37 @@
       })
       .keyup(doJSON); // harmless to repeat doJSON
 
+    $(".json")
+      .on("dragenter", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      })
+      .on("dragover", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      })
+      .on("drop", function(e) {
+        if (e.originalEvent.dataTransfer) {
+          if (e.originalEvent.dataTransfer.files.length) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            var reader = new FileReader();
+            reader.onload = function(ev) {
+              console.log(ev.target.result);
+              $(".json textarea").val(ev.target.result);
+            }
+            reader.readAsText(e.originalEvent.dataTransfer.files[0]);
+
+            setTimeout(function() {
+              doJSON();
+              // showJSON(true);
+              $(".json textarea").blur();
+            }, 1);
+          }
+        }
+      });
+
     // highlight CSV on click
     $(".csv textarea").click(function() {$(this).focus().select();});
 
