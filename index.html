@@ -270,7 +270,6 @@
         // delay the showing so the paste is pasted by then
         setTimeout(function() {
           doJSON();
-          // showJSON(true);
           $(".json textarea").blur();
         }, 1);
       })
@@ -292,17 +291,18 @@
             e.stopPropagation();
 
             var reader = new FileReader();
+
             reader.onload = function(ev) {
               console.log(ev.target.result);
               $(".json textarea").val(ev.target.result);
-            }
-            reader.readAsText(e.originalEvent.dataTransfer.files[0]);
 
-            setTimeout(function() {
-              doJSON();
-              // showJSON(true);
-              $(".json textarea").blur();
-            }, 1);
+              setTimeout(function() {
+                doJSON();
+                $(".json textarea").blur();
+              }, 1);
+            }
+
+            reader.readAsText(e.originalEvent.dataTransfer.files[0]);
           }
         }
       });
