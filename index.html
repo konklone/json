@@ -43,6 +43,9 @@
   // }
 
   function doJSON() {
+    // just in case
+    $(".drop").hide();
+
     // get input JSON, try to parse it
     var newInput = $(".json textarea").val();
     if (newInput == input) return;
@@ -275,16 +278,29 @@
       })
       .keyup(doJSON); // harmless to repeat doJSON
 
-    $(".json")
+    // go away
+    $("body").click(function() {
+      $(".drop").hide();
+    });
+
+    $(document)
       .on("dragenter", function(e) {
         e.preventDefault();
         e.stopPropagation();
+        $(".drop").show();
       })
       .on("dragover", function(e) {
         e.preventDefault();
         e.stopPropagation();
       })
+      .on("dragend", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(".drop").hide();
+      })
       .on("drop", function(e) {
+        $(".drop").hide();
+
         if (e.originalEvent.dataTransfer) {
           if (e.originalEvent.dataTransfer.files.length) {
             e.preventDefault();
@@ -342,6 +358,7 @@
   <div class="areas">
     <textarea class="editing"></textarea>
     <pre class="rendered"><code></code></pre>
+    <div class="drop">DROP JSON HERE</div>
   </div>
 
   <div class="warning">
