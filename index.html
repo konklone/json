@@ -59,9 +59,26 @@
 
     console.log("ordered to parse JSON...");
 
-    var json = jsonFrom(input);
+    var json;
 
-    // if succeeded, prettify and highlight it
+    try {
+      json = jsonFrom(input);
+    } catch (e) { }
+
+    if (!json && /^http/.test(input)) {
+      console.log("handling as a URL: " + input);
+      $.get(input).success(function (data) {
+        processJSON(data);
+      }).fail(function () {
+        processJSON(undefined);
+      });
+      return;
+    }
+    processJSON(json);
+  }
+
+  function processJSON(json) {
+    // prettify and highlight it
     // highlight shows when textarea loses focus
     if (json) {
       var pretty = JSON.stringify(json, undefined, 2);
@@ -72,8 +89,6 @@
 
     // convert to CSV, make available
     doCSV(json);
-
-    return true;
   }
 
   // show rendered JSON
