@@ -41,21 +41,17 @@ function parse_object(obj, path) {
 
 
 // otherwise, just find the first one
-function arrayFrom(json, key) {
-    if ($.type(json) == "array")
-        return json;
-    else if (key)
-        return json[key];
-
-    else {
-        for (var key in json) {
-            if ($.type(json[key]) == "array")
-                return json[key];
-        }
-
-        // none found, consider the whole object a row
-        return [json];
+function arrayFrom(json) {
+    var queue = [], next = json;
+    while (next) {
+        if ($.type(next) == "array")
+            return next;
+        for (var key in next)
+           queue.push(next[key]);
+        next = queue.shift();
     }
+    // none found, consider the whole object a row
+    return [json];
 }
 
 // todo: add graceful error handling
