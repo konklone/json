@@ -66,7 +66,8 @@
     if (json) {
       var pretty = JSON.stringify(json, undefined, 2);
       $(".json code").html(pretty);
-      hljs.highlightBlock($(".json code").get(0));
+      if (pretty.length < (100 * 1024))
+        hljs.highlightBlock($(".json code").get(0));
     } else
       $(".json code").html("");
 
@@ -362,7 +363,7 @@
   </div>
 
   <div class="warning">
-    Extremely large files may cause trouble &mdash; the conversion is done inside your browser. In that case, try out the powerful <a href="http://csvkit.readthedocs.org/en/latest/scripts/in2csv.html">csvkit</a>.
+    Extremely large files may cause trouble &mdash; the conversion is done inside your browser.
   </div>
 </section>
 
