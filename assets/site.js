@@ -46,8 +46,10 @@ function arrayFrom(json) {
     while (next !== undefined) {
         if ($.type(next) == "array")
             return next;
-        for (var key in next)
-           queue.push(next[key]);
+        if ($.type(next) == "object") {
+          for (var key in next)
+             queue.push(next[key]);
+        }
         next = queue.shift();
     }
     // none found, consider the whole object a row
