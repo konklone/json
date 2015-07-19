@@ -6,7 +6,7 @@ function getParam(name) {
 }
 
 // adapted from csvkit's recursive JSON flattening mechanism:
-// https://github.com/onyxfish/csvkit/blob/master/csvkit/convert/js.py#L8-L27
+// https://github.com/onyxfish/csvkit/blob/61b9c208b7665c20e9a8e95ba6eee811d04705f0/csvkit/convert/js.py#L15-L34
 
 // depends on jquery and jquery-csv (for now)
 
