@@ -43,7 +43,7 @@ function parse_object(obj, path) {
 // otherwise, just find the first one
 function arrayFrom(json) {
     var queue = [], next = json;
-    while (next) {
+    while (next !== undefined) {
         if ($.type(next) == "array")
             return next;
         for (var key in next)
