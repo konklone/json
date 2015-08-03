@@ -42,19 +42,19 @@
   //   return log(msg).addClass("error");
   // }
 
-  function doJSON() {
+  function doJSON(forced) {
     // just in case
     $(".drop").hide();
 
     // get input JSON, try to parse it
     var newInput = $(".json textarea").val();
-    if (newInput == input) return;
+    if (!forced && newInput == input) return;
 
     input = newInput;
     if (!input) {
       // wipe the rendered version too
       $(".json code").html("");
-      return;
+      if(!forced) return;
     }
 
     var json = jsonFrom(input);
@@ -154,7 +154,8 @@
 
     $("span.rows.count").text("" + outArray.length);
 
-    var csv = $.csv.fromObjects(outArray);
+    console.log($(".separator").val());
+    var csv = $.csv.fromObjects(outArray, {separator: $(".separator").val().replace("TAB", "\t")});
     // excerpt and render first 10 rows
     renderCSV(outArray.slice(0, excerptRows));
     showCSV(true);
@@ -278,6 +279,14 @@
       })
       .keyup(doJSON); // harmless to repeat doJSON
 
+    // transform when separator changes too
+    $(".separator").on('input', function() {
+      setTimeout(function() {
+        doJSON(true); // true = force JSON regeneration
+        $(".json textarea").blur();
+      }, 1);
+    });
+
     // go away
     $("body").click(function() {
       $(".drop").hide();
@@ -353,6 +362,16 @@
     <span>
       Please <a href="https://github.com/konklone/json/issues">report bugs and send feedback</a> on GitHub.
     </span>
+  </p>
+
+  <p>
+    Separator when downloading: <select class="separator">
+      <option value=",">Comma (,)</option>
+      <option value=";">Semicolon (;)</option>
+      <option value=":">Colon (:)</option>
+      <option value=".">Period (.)</option>
+      <option value="TAB">Tab</option>
+    </select>
   </p>
 
   <div class="areas">
