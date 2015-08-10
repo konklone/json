@@ -23,6 +23,10 @@ h1 {
   width: 100%; height: 100%;
   position: absolute;
 }
+
+/* fix top border bug on json textarea */
+.json textarea {position: static !important;}
+
 .csv .table {overflow-x: scroll;}
 .json pre {cursor: pointer;}
 
