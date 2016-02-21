@@ -62,12 +62,22 @@
     // if succeeded, prettify and highlight it
     // highlight shows when textarea loses focus
     if (json) {
+      // Reset any error message from previous failed parses.
+      $("div.error").hide();
+      $("div.warning").show();
+
       var pretty = JSON.stringify(json, undefined, 2);
       $(".json code").html(pretty);
       if (pretty.length < (50 * 1024))
         hljs.highlightBlock($(".json code").get(0));
-    } else
+    } else {
+      // Show error.
+      $("div.warning").hide();
+      $("div.error").show();
       $(".json code").html("");
+
+      return;
+    }
 
 
     // convert to CSV, make available
@@ -265,7 +275,8 @@
       return !!$(".csv textarea").val();
     });
 
-    $(".save a").click(saveJSON);
+    // Both elements are present on page-load, so use normal click handler.
+    $(".save a, .error a.save").click(saveJSON);
 
     // transform the JSON whenever it's pasted/edited
     $(".json textarea")
@@ -367,6 +378,17 @@
 
   <div class="warning">
     Extremely large files may cause trouble &mdash; the conversion is done inside your browser.
+  </div>
+
+  <div class="error">
+    There was an error parsing this JSON. If you're sure this JSON is valid,
+    <a class="save" href="#">
+      create a permalink to this error
+    </a> and
+    <a target="_blank"
+      href="https://github.com/konklone/json/issues/new">
+      file an issue
+    </a> including that permalink.
   </div>
 </section>
 

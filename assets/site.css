@@ -45,6 +45,11 @@ h1 {
 .csv .rendered {display: none;}
 
 .json .warning {margin-top: 5px; color: #888;}
+.json .error {
+  display: none;
+  margin-top: 5px;
+  color: #a00; font-weight: normal;
+}
 .json .permalink {display: none;}
 
 .csv {color: black;margin-top: 30px;}
