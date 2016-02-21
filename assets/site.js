@@ -56,9 +56,39 @@ function arrayFrom(json) {
     return [json];
 }
 
+// adapted from Mattias Petter Johanssen:
+// https://www.quora.com/How-can-I-parse-unquoted-JSON-with-JavaScript/answer/Mattias-Petter-Johansson
+function quoteKeys(input) {
+  return input.replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2": ');
+}
+
+function removeTrailingComma(input) {
+  if (input.slice(-1) == ",")
+    return input.slice(0,-1);
+  else
+    return input;
+}
+
 // todo: add graceful error handling
 function jsonFrom(input) {
   var string = $.trim(input);
   if (!string) return;
-  return JSON.parse(string);
+
+  var result = null;
+  try {
+    result = JSON.parse(string);
+  } catch (err) {
+    console.log(err);
+    console.log("Parse failed, retrying after forcibly quoting keys and removing trailing commas...")
+
+    try {
+      result = JSON.parse(quoteKeys(removeTrailingComma(string)))
+      console.log("Yep: quoting keys and removing trailing commas worked.")
+    } catch (err) {
+      console.log(err);
+      console.log("Nope: that didn't work either. No good.")
+    }
+  }
+
+  return result;
 }
