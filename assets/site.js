@@ -78,6 +78,20 @@ function removeTrailingComma(input) {
     return input;
 }
 
+// Rudimentary, imperfect detection of JSON Lines (http://jsonlines.org):
+//
+// Is there a closing brace and an opening brace with only whitespace between?
+function isJSONLines(string) {
+ return !!(string.match(/\}\s+\{/))
+}
+
+// To convert JSON Lines to JSON:
+// * Add a comma between spaced braces
+// * Surround with array brackets
+function linesToJSON(string) {
+  return "[" + string.replace(/\}\s+\{/g, "}, {") + "]";
+}
+
 // todo: add graceful error handling
 function jsonFrom(input) {
   var string = $.trim(input);
@@ -88,16 +102,41 @@ function jsonFrom(input) {
     result = JSON.parse(string);
   } catch (err) {
     console.log(err);
-    console.log("Parse failed, retrying after forcibly quoting keys and removing trailing commas...")
+  }
 
+  if (result == null) {
+    console.log("Parse failed, retrying after forcibly quoting keys and removing trailing commas...")
+    var relaxed = quoteKeys(removeTrailingComma(string))
     try {
-      result = JSON.parse(quoteKeys(removeTrailingComma(string)))
-      console.log("Yep: quoting keys and removing trailing commas worked.")
+      result = JSON.parse(relaxed);
+      console.log("Yep: quoting keys and removing trailing commas worked!")
     } catch (err) {
       console.log(err);
-      console.log("Nope: that didn't work either. No good.")
     }
   }
+
+  // Try to detect if it's a JSON-lines object - if so, we can parse this.
+  //
+  // However, this should be TRIED LAST, because this could also modify the
+  // CONTENT of the strings (it's not precise enough to only target real
+  // line breaks) so if the problem was actually something else, then we want to
+  // fix that problem instead. (That said, the string content modification
+  // would be minimal -- adding a comma between braces, so that's why I feel
+  // okay taking this approach.)
+  if ((result == null) && isJSONLines(string)) {
+    console.log("Parse failed. Looks like it might be JSON lines, retrying...")
+    var lines = linesToJSON(string)
+    try {
+      result = JSON.parse(lines)
+      console.log("Yep: it was JSON lines!")
+    } catch (err) {
+      console.log(err);
+      if (lines.length < 5000) console.log(lines);
+    }
+  }
+
+  if (result == null)
+    console.log("Nope: that didn't work either. No good.")
 
   return result;
 }
