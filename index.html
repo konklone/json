@@ -62,16 +62,26 @@
     // if succeeded, prettify and highlight it
     // highlight shows when textarea loses focus
     if (json) {
+      // Reset any error message from previous failed parses.
+      $("div.error").hide();
+      $("div.warning").show();
+
       var pretty = JSON.stringify(json, undefined, 2);
       $(".json code").html(pretty);
       if (pretty.length < (50 * 1024))
         hljs.highlightBlock($(".json code").get(0));
-    } else
+
+      // convert to CSV, make available
+      doCSV(json);
+    } else {
+      // Show error.
+      $("div.warning").hide();
+      $("div.error").show();
       $(".json code").html("");
+    }
 
-
-    // convert to CSV, make available
-    doCSV(json);
+    // Either way, update the error-reporting link to include the latest.
+    setErrorReporting(null, input);
 
     return true;
   }
@@ -200,6 +210,9 @@
       // mark what we last saved
       lastSaved = input;
 
+      // update error-reporting link, including permalink
+      setErrorReporting(data.id, input);
+
       console.log("Remaining this hour: " + xhr.getResponseHeader("X-RateLimit-Remaining"));
 
     }).fail(function(xhr, status, errorThrown) {
@@ -217,6 +230,44 @@
     });
 
     return false;
+  }
+
+  // Updates the error-reporting link to include current details.
+  //
+  // If the passed-in `id` is not null, a permalink is included.
+  // If the passed-in `id` is null, then no permalink is included.
+  // (Needed explicitly because the current URL doesn't always refer
+  // to a permalink related to the current value of the textarea.)
+  //
+  // The current body of the textarea will be encoded into the URI,
+  // to pre-populate the GitHub issue template, but only if the body
+  // is < 7KB (7,168). GitHub's nginx server rejects query strings
+  // longer than ~8KB.
+  //
+  // If no `id` is given, and content is too long, the URL will
+  // encode only a title, and no body.
+  function setErrorReporting(id, content) {
+    var base = "https://github.com/konklone/json/issues/new";
+
+    var title = "Error parsing some specific JSON";
+
+    var body = "I'm having an issue converting this JSON:\n\n";
+    if (id) body += (
+      window.location.protocol + "//" +
+      window.location.host + window.location.pathname +
+      "?id=" + id + "\n\n"
+    );
+
+    if (content.length <= (7 * 1024))
+      body += ("```json\n" + content + "\n```");
+
+    var finalUrl = base + "?title=" + encodeURIComponent(title) +
+      "&body=" + encodeURIComponent(body);
+
+    $(".error a.report").attr("href", finalUrl);
+
+    // console.log("Updated error reporting link to:" + finalUrl);
+    return true;
   }
 
   // given a valid gist ID, set the permalink to use it
@@ -265,7 +316,8 @@
       return !!$(".csv textarea").val();
     });
 
-    $(".save a").click(saveJSON);
+    // Both elements are present on page-load, so use normal click handler.
+    $(".save a, .error a.save").click(saveJSON);
 
     // transform the JSON whenever it's pasted/edited
     $(".json textarea")
@@ -351,7 +403,7 @@
     </span>
 
     <span>
-      Please <a href="https://github.com/konklone/json/issues">report bugs and send feedback</a> on GitHub.
+      Please <a target="_blank" href="https://github.com/konklone/json/issues">report bugs and send feedback</a> on GitHub.
     </span>
 
     <span>
@@ -367,6 +419,16 @@
 
   <div class="warning">
     Extremely large files may cause trouble &mdash; the conversion is done inside your browser.
+  </div>
+
+  <div class="error">
+    There was an error parsing this JSON. If you're sure this JSON is valid, please
+    <a class="report" target="_blank"
+      href="https://github.com/konklone/json/issues/new">
+      file an issue</a>.
+    You can
+    <a class="save" href="#">create a permalink to the error</a>
+    any time.
   </div>
 </section>
 

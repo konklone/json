@@ -44,9 +44,18 @@ function parse_object(obj, path) {
 function arrayFrom(json) {
     var queue = [], next = json;
     while (next !== undefined) {
-        if ($.type(next) == "array")
-            return next;
-        if ($.type(next) == "object") {
+        if ($.type(next) == "array") {
+
+            // but don't if it's just empty, or an array of scalars
+            if (next.length > 0) {
+
+              var type = $.type(next[0]);
+              var scalar = (type == "number" || type == "string" || type == "boolean" || type == "null");
+
+              if (!scalar)
+                return next;
+            }
+        } if ($.type(next) == "object") {
           for (var key in next)
              queue.push(next[key]);
         }
@@ -56,9 +65,39 @@ function arrayFrom(json) {
     return [json];
 }
 
+// adapted from Mattias Petter Johanssen:
+// https://www.quora.com/How-can-I-parse-unquoted-JSON-with-JavaScript/answer/Mattias-Petter-Johansson
+function quoteKeys(input) {
+  return input.replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2": ');
+}
+
+function removeTrailingComma(input) {
+  if (input.slice(-1) == ",")
+    return input.slice(0,-1);
+  else
+    return input;
+}
+
 // todo: add graceful error handling
 function jsonFrom(input) {
   var string = $.trim(input);
   if (!string) return;
-  return JSON.parse(string);
+
+  var result = null;
+  try {
+    result = JSON.parse(string);
+  } catch (err) {
+    console.log(err);
+    console.log("Parse failed, retrying after forcibly quoting keys and removing trailing commas...")
+
+    try {
+      result = JSON.parse(quoteKeys(removeTrailingComma(string)))
+      console.log("Yep: quoting keys and removing trailing commas worked.")
+    } catch (err) {
+      console.log(err);
+      console.log("Nope: that didn't work either. No good.")
+    }
+  }
+
+  return result;
 }

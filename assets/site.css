@@ -44,7 +44,13 @@ h1 {
 .csv textarea {}
 .csv .rendered {display: none;}
 
+.json .error a.report {font-weight: bold;}
 .json .warning {margin-top: 5px; color: #888;}
+.json .error {
+  display: none;
+  margin-top: 5px;
+  color: #a00; font-weight: normal;
+}
 .json .permalink {display: none;}
 
 .csv {color: black;margin-top: 30px;}
