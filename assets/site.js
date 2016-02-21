@@ -44,9 +44,18 @@ function parse_object(obj, path) {
 function arrayFrom(json) {
     var queue = [], next = json;
     while (next !== undefined) {
-        if ($.type(next) == "array")
-            return next;
-        if ($.type(next) == "object") {
+        if ($.type(next) == "array") {
+
+            // but don't if it's just empty, or an array of scalars
+            if (next.length > 0) {
+
+              var type = $.type(next[0]);
+              var scalar = (type == "number" || type == "string" || type == "boolean" || type == "null");
+
+              if (!scalar)
+                return next;
+            }
+        } if ($.type(next) == "object") {
           for (var key in next)
              queue.push(next[key]);
         }
