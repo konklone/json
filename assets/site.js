@@ -1,3 +1,18 @@
+Events = {
+  permalink: function() {
+    ga('send', 'event', 'permalink', 'created')
+  },
+
+  permalink_error: function(value) {
+    ga('send', 'event', 'permalink', 'error', "" + value);
+  },
+
+  download: function(size) {
+    ga('send', 'event', 'download', 'clicked', 'size', size);
+  }
+
+}
+
 function getParam(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),

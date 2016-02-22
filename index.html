@@ -207,6 +207,9 @@
       // take new Gist id, make permalink
       setPermalink(data.id);
 
+      // send analytics event
+      Events.permalink();
+
       // mark what we last saved
       lastSaved = input;
 
@@ -217,6 +220,10 @@
 
     }).fail(function(xhr, status, errorThrown) {
       console.log(xhr);
+
+      // send analytics event
+      Events.permalink_error(status);
+
       // TODO: gracefully handle rate limit errors
       // if (status == 403)
 
@@ -311,9 +318,15 @@
       return false;
     })
 
-    // if there's no CSV to download, don't download anything
+    // if there's no CSV to download, don't download anything.
+    // also, log an analytics event.
     $(".csv a.download").click(function() {
-      return !!$(".csv textarea").val();
+      var data = $(".csv textarea").val();
+      if (data) {
+        Events.download(data.length);
+        return true;
+      } else
+        return false;
     });
 
     // Both elements are present on page-load, so use normal click handler.
