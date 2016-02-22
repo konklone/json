@@ -7,8 +7,8 @@ Events = {
     ga('send', 'event', 'permalink', 'error', "" + value);
   },
 
-  download: function() {
-    ga('send', 'event', 'download', 'clicked');
+  download: function(size) {
+    ga('send', 'event', 'download', 'clicked', 'size', size);
   }
 
 }
