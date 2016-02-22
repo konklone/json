@@ -1,6 +1,6 @@
 Events = {
-  permalink: function(id) {
-    ga('send', 'event', 'permalink', 'created', id)
+  permalink: function() {
+    ga('send', 'event', 'permalink', 'created')
   },
 
   permalink_error: function(value) {
