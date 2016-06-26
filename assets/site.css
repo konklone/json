@@ -24,9 +24,6 @@ h1 {
   position: absolute;
 }
 
-/* fix top border bug on json textarea */
-.json textarea {position: static !important;}
-
 .csv .table {overflow-x: scroll;}
 .json pre {cursor: pointer;}
 
