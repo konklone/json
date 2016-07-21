@@ -15,6 +15,15 @@
 
 <link rel="shortcut icon" href="/json/favicon.png" />
 
+<!--
+redirect users to the https version of the website.
+but: only check when on the production domain.
+-->
+<script type="text/javascript">
+  var enforce = "konklone.io";
+  if ((enforce == window.location.host) && (window.location.protocol != "https:"))
+    window.location.protocol = "https";
+</script>
 
 <!-- jquery, jquery-csv,bootstrap -->
 <script type='text/javascript' src='assets/jquery-2.1.1.min.js'></script>
