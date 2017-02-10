@@ -36,6 +36,7 @@ if (!module.parent) {
   }
 
   console.error(JSON.stringify(inputData));
+  doCSV(inputData);
 } 
 
 function doJSON() {
@@ -158,7 +159,7 @@ function doCSV(json) {
 	for (var row in inArray)
 			outArray[outArray.length] = parse_object(inArray[row]);
 
-	$("span.rows.count").text("" + outArray.length);
+	//$("span.rows.count").text("" + outArray.length);
 
 	var csv = $.csv.fromObjects(outArray);
 	// excerpt and render first 10 rows
@@ -166,13 +167,13 @@ function doCSV(json) {
 	showCSV(true);
 
 	// show raw data if people really want it
-	$(".csv textarea").val(csv);
+	//$(".csv textarea").val(csv);
 
 	// download link to entire CSV as data
 	// thanks to https://jsfiddle.net/terryyounghk/KPEGU/
 	// and https://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side
-	var uri = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
-	$(".csv a.download").attr("href", uri);
+	//var uri = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+	//$(".csv a.download").attr("href", uri);
 }
 
 // loads original pasted JSON from textarea, saves to anonymous gist
