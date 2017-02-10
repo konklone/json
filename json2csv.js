@@ -15,6 +15,9 @@ function usage ( ) {
 	console.log('usage: ', process.argv.slice(0, 2), 'inputfile.json');
 }
 
+require('./assets/jquery-2.1.1.min.js')();
+require('./assets/jquery.csv.js')();
+require('./assets/site.js')();
 if (!module.parent) {
   var inputFileName = process.argv.slice(2, 3).pop();
 
