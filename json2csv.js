@@ -44,7 +44,13 @@ if (!module.parent) {
   }
 
   //console.error(JSON.stringify(inputData));
-  console.error("About to convert",inputData.length,"records to CSV");
+  var chunklength = 100000;
+  while(inputData.length > chunklength) {
+    var bigchunk = inputData.splice(0, chunklength-1)
+    console.error("About to convert chunk of",bigchunk.length,"records to CSV");
+    doCSV(bigchunk);
+  }
+  console.error("About to convert remaining",inputData.length,"records to CSV");
   doCSV(inputData);
 } 
 
