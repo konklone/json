@@ -16,6 +16,14 @@ function usage ( ) {
 }
 
 if (!module.parent) {
+
+  var jsdom = require("jsdom").jsdom;
+  global.window = jsdom().defaultView;
+  global.jQuery = global.$ = require("jquery");
+
+  require('./assets/jquery-2.1.1.min.js');
+  require('./assets/jquery.csv.js');
+  require('./assets/site.js');
   var inputFileName = process.argv.slice(2, 3).pop();
 
   if ([null, '--help', '-h', 'help'].indexOf(inputFileName) > 0) {
@@ -35,7 +43,8 @@ if (!module.parent) {
     return console.error("Could not parse input file: ", e);
   }
 
-  console.error(JSON.stringify(inputData));
+  //console.error(JSON.stringify(inputData));
+  doCSV(inputData);
 } 
 
 function doJSON() {
@@ -158,21 +167,22 @@ function doCSV(json) {
 	for (var row in inArray)
 			outArray[outArray.length] = parse_object(inArray[row]);
 
-	$("span.rows.count").text("" + outArray.length);
+	//$("span.rows.count").text("" + outArray.length);
 
 	var csv = $.csv.fromObjects(outArray);
+	console.log(csv);
 	// excerpt and render first 10 rows
-	renderCSV(outArray.slice(0, excerptRows));
+	//renderCSV(outArray.slice(0, excerptRows));
 	showCSV(true);
 
 	// show raw data if people really want it
-	$(".csv textarea").val(csv);
+	//$(".csv textarea").val(csv);
 
 	// download link to entire CSV as data
 	// thanks to https://jsfiddle.net/terryyounghk/KPEGU/
 	// and https://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side
-	var uri = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
-	$(".csv a.download").attr("href", uri);
+	//var uri = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+	//$(".csv a.download").attr("href", uri);
 }
 
 // loads original pasted JSON from textarea, saves to anonymous gist
