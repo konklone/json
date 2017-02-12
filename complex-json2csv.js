@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var excerptRows = 7;
 var input;
 var url;
