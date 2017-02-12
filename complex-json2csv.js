@@ -46,7 +46,7 @@ if (!module.parent) {
   }
 
   //console.error(JSON.stringify(inputData));
-  console.error("About to convert",inputData.length,"records to CSV");
+  //console.error("About to convert",inputData.length,"records to CSV");
   doCSV(inputData);
 } 
 
