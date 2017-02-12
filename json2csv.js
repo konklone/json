@@ -15,10 +15,15 @@ function usage ( ) {
 	console.log('usage: ', process.argv.slice(0, 2), 'inputfile.json');
 }
 
-require('./assets/jquery-2.1.1.min.js')();
-require('./assets/jquery.csv.js')();
-require('./assets/site.js')();
 if (!module.parent) {
+
+  var jsdom = require("jsdom").jsdom;
+  global.window = jsdom().defaultView;
+  global.jQuery = global.$ = require("jquery");
+
+  require('./assets/jquery-2.1.1.min.js');
+  require('./assets/jquery.csv.js');
+  require('./assets/site.js');
   var inputFileName = process.argv.slice(2, 3).pop();
 
   if ([null, '--help', '-h', 'help'].indexOf(inputFileName) > 0) {
@@ -38,7 +43,7 @@ if (!module.parent) {
     return console.error("Could not parse input file: ", e);
   }
 
-  console.error(JSON.stringify(inputData));
+  //console.error(JSON.stringify(inputData));
   doCSV(inputData);
 } 
 
@@ -165,8 +170,9 @@ function doCSV(json) {
 	//$("span.rows.count").text("" + outArray.length);
 
 	var csv = $.csv.fromObjects(outArray);
+	console.log(csv);
 	// excerpt and render first 10 rows
-	renderCSV(outArray.slice(0, excerptRows));
+	//renderCSV(outArray.slice(0, excerptRows));
 	showCSV(true);
 
 	// show raw data if people really want it
