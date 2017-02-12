@@ -27,6 +27,7 @@ rm $partsdir/*.json 2>&1 | grep -v "No such file" || echo -n ""
 #converts chunked files into json array
 cd $partsdir/
 ls | while read file; do echo -n "." > /dev/stderr; done; echo > /dev/stderr
+echo "Grouping split records into valid json..."
 ls | while read file; do
   cat $file | json -g > $file.json
   echo -n "-" > /dev/stderr
