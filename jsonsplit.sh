@@ -3,17 +3,24 @@
 # exit immediately on any errors
 set -eu
 
-#get input file
-fullinputfile=$1
-inputfile=${fullinputfile%.json}
-partsdir=${inputfile}_parts
 
+# echo $#
 #if not specified, then set the records to 100,000
-if [ -z $2 ] ; then 
+if [ $# -eq 0 ]; then
+    echo "Error: Please provide an input file. "
+    echo "Usage: $0 inputfile.json [records]"
+    exit    
+elif [ $# -eq 1 ]; then
+# if [ -z ${2=x} ]; then 
     records=100000
 else
     records=$2
 fi
+
+#get input file
+fullinputfile=$1
+inputfile=${fullinputfile%.json}
+partsdir=${inputfile}_parts
 
 #create a directory to store the split files
 mkdir -p $partsdir 
