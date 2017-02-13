@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-var excerptRows = 7;
+//var excerptRows = 7;
 var input;
-var url;
-var lastSaved;
+//var url;
+//var lastSaved;
 
 // function log(msg) {
 //   return $(".console").removeClass("error").html(msg);
@@ -95,31 +95,31 @@ function doJSON() {
 }
 
 // show rendered JSON
-function showJSON(rendered) {
-	console.log("ordered to show JSON: " + rendered);
-	if (rendered) {
-		if ($(".json code").html()) {
-			console.log("there's code to show, showing...");
-			$(".json .rendered").show();
-			$(".json .editing").hide();
-		}
-	} else {
-		$(".json .rendered").hide();
-		$(".json .editing").show().focus();
-	}
-}
+//function showJSON(rendered) {
+//	console.log("ordered to show JSON: " + rendered);
+//	if (rendered) {
+//		if ($(".json code").html()) {
+//			console.log("there's code to show, showing...");
+//			$(".json .rendered").show();
+//			$(".json .editing").hide();
+//		}
+//	} else {
+//		$(".json .rendered").hide();
+//		$(".json .editing").show().focus();
+//	}
+//}
 
-function showCSV(rendered) {
-	if (rendered) {
-		if ($(".csv table").html()) {
-			$(".csv .rendered").show();
-			$(".csv .editing").hide();
-		}
-	} else {
-		$(".csv .rendered").hide();
-		$(".csv .editing").show().focus();
-	}
-}
+//function showCSV(rendered) {
+//	if (rendered) {
+//		if ($(".csv table").html()) {
+//			$(".csv .rendered").show();
+//			$(".csv .editing").hide();
+//		}
+//	} else {
+//		$(".csv .rendered").hide();
+//		$(".csv .editing").show().focus();
+//	}
+//}
 
 // takes an array of flat JSON objects, converts them to arrays
 // renders them into a small table as an example
@@ -190,48 +190,48 @@ function doCSV(json) {
 
 // loads original pasted JSON from textarea, saves to anonymous gist
 // rate-limiting means this could easily fail with a 403.
-function saveJSON() {
-	if (!input) return false;
-	if (input == lastSaved) return false;
+//function saveJSON() {
+//	if (!input) return false;
+//	if (input == lastSaved) return false;
 
 	// save a permalink to an anonymous gist
-	var gist = {
-		description: "test",
-		public: false,
-		files: {
-			"source.json": {
-					"content": input
-			}
-		}
-	};
+//	var gist = {
+//		description: "test",
+//		public: false,
+//		files: {
+//			"source.json": {
+//					"content": input
+//			}
+//		}
+//	};
 
 	// TODO: show spinner/msg while this happens
 
-	console.log("Saving to an anonymous gist...");
-	$.post(
-		'https://api.github.com/gists',
-		JSON.stringify(gist)
-	).done(function(data, status, xhr) {
+//	console.log("Saving to an anonymous gist...");
+//	$.post(
+//		'https://api.github.com/gists',
+//		JSON.stringify(gist)
+//	).done(function(data, status, xhr) {
 
 		// take new Gist id, make permalink
-		setPermalink(data.id);
+//		setPermalink(data.id);
 
 		// send analytics event
-		Events.permalink();
+//		Events.permalink();
 
 		// mark what we last saved
-		lastSaved = input;
+//		lastSaved = input;
 
 		// update error-reporting link, including permalink
-		setErrorReporting(data.id, input);
+//		setErrorReporting(data.id, input);
 
-		console.log("Remaining this hour: " + xhr.getResponseHeader("X-RateLimit-Remaining"));
+//		console.log("Remaining this hour: " + xhr.getResponseHeader("X-RateLimit-Remaining"));
 
-	}).fail(function(xhr, status, errorThrown) {
-		console.log(xhr);
+//	}).fail(function(xhr, status, errorThrown) {
+//		console.log(xhr);
 
 		// send analytics event
-		Events.permalink_error(status);
+//		Events.permalink_error(status);
 
 		// TODO: gracefully handle rate limit errors
 		// if (status == 403)
@@ -243,10 +243,10 @@ function saveJSON() {
 		// date.setTime(parseInt(reset) * 1000);
 		// use http://momentjs.com/ to say "in _ minutes"
 
-	});
+//	});
 
-	return false;
-}
+//	return false;
+//}
 
 // Updates the error-reporting link to include current details.
 //
@@ -262,57 +262,57 @@ function saveJSON() {
 //
 // If no `id` is given, and content is too long, the URL will
 // encode only a title, and no body.
-function setErrorReporting(id, content) {
-	var base = "https://github.com/konklone/json/issues/new";
+//function setErrorReporting(id, content) {
+//	var base = "https://github.com/konklone/json/issues/new";
 
-	var title = "Error parsing some specific JSON";
+//	var title = "Error parsing some specific JSON";
 
-	var body = "I'm having an issue converting this JSON:\n\n";
-	if (id) body += (
-		window.location.protocol + "//" +
-		window.location.host + window.location.pathname +
-		"?id=" + id + "\n\n"
-	);
+//	var body = "I'm having an issue converting this JSON:\n\n";
+//	if (id) body += (
+//		window.location.protocol + "//" +
+//		window.location.host + window.location.pathname +
+//		"?id=" + id + "\n\n"
+//	);
 
-	if (content.length <= (7 * 1024))
-		body += ("```json\n" + content + "\n```");
+//	if (content.length <= (7 * 1024))
+//		body += ("```json\n" + content + "\n```");
 
-	var finalUrl = base + "?title=" + encodeURIComponent(title) +
-		"&body=" + encodeURIComponent(body);
+//	var finalUrl = base + "?title=" + encodeURIComponent(title) +
+//		"&body=" + encodeURIComponent(body);
 
-	$(".error a.report").attr("href", finalUrl);
+//	$(".error a.report").attr("href", finalUrl);
 
 	// console.log("Updated error reporting link to:" + finalUrl);
-	return true;
-}
+//	return true;
+/}
 
 // given a valid gist ID, set the permalink to use it
-function setPermalink(id) {
-	if (history && history.pushState)
-		history.pushState({id: id}, null, "?id=" + id);
+//function setPermalink(id) {
+//	if (history && history.pushState)
+//		history.pushState({id: id}, null, "?id=" + id);
 
 	// log("Permalink created! (Copy from the location bar.)")
-}
+//}
 
 // check query string for gist ID
-function loadPermalink() {
-	var id = getParam("id");
-	if (!id) return;
+//function loadPermalink() {
+//	var id = getParam("id");
+//	if (!id) return;
 
-	$.get('https://api.github.com/gists/' + id,
-		function(data, status, xhr) {
-			console.log("Remaining this hour: " + xhr.getResponseHeader("X-RateLimit-Remaining"));
+//	$.get('https://api.github.com/gists/' + id,
+//		function(data, status, xhr) {
+//			console.log("Remaining this hour: " + xhr.getResponseHeader("X-RateLimit-Remaining"));
 
-			var input = data.files["source.json"].content;
-			$(".json textarea").val(input);
-			doJSON();
-			showJSON(true);
-		}
-	).fail(function(xhr, status, errorThrown) {
-		console.log("Error fetching anonymous gist!");
-		console.log(xhr);
-		console.log(status);
-		console.log(errorThrown);
-	});
-}
+//			var input = data.files["source.json"].content;
+//			$(".json textarea").val(input);
+//			doJSON();
+//			showJSON(true);
+//		}
+//	).fail(function(xhr, status, errorThrown) {
+//		console.log("Error fetching anonymous gist!");
+//		console.log(xhr);
+//		console.log(status);
+//		console.log(errorThrown);
+//	});
+/}
 
