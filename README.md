@@ -7,9 +7,12 @@ A simple JSON to CSV converter that handles objects and nested documents.
 
 To install and run via the command line:
 * `npm install -g complex-json2csv`
-* type the name of the command and provide an input file (`complex-json2csv inputfile.json`)
- * This will print the output to the screen. 
- * To create a csv file: `complex-json2csv inputfile.json > outputfile.csv`
+* type the name of the command and provide an input file 
+  * `complex-json2csv inputfile.json` - this will print the output to the screen. 
+  * `complex-json2csv inputfile.json > outputfile.csv` - this will print output to a csv file
+ * `jsonsplit inputfile.json [records]` - this will split the file into records based on the [records] size
+   * If you do not specify size, it defaults to splitting by 100000
+
 
 
 Please file all bugs [in the issue tracker](https://github.com/konklone/json/issues).
