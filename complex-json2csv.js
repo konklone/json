@@ -152,3 +152,5 @@ function doCSV(json) {
 	// excerpt and render first 10 rows
 	//renderCSV(outArray.slice(0, excerptRows));
 	showCSV(true);
+
+}
