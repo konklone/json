@@ -5,6 +5,13 @@ A simple JSON to CSV converter that handles objects and nested documents.
 * In the **web** version, conversion happens inside the browser, in straight JavaScript. It may choke on large files.
 * With complex-csv2json.js, it can be run via the **command line**. It uses jsonsplit.sh to deal with large files.
 
+To install and run via the command line:
+* `npm install -g complex-json2csv`
+* type the name of the command and provide an input file (`complex-json2csv inputfile.json`)
+ * This will print the output to the screen. 
+ * To create a csv file: `complex-json2csv inputfile.json > outputfile.csv`
+
+
 Please file all bugs [in the issue tracker](https://github.com/konklone/json/issues).
 
 Read more about the converter and why I built it: "[Making JSON as simple as a spreadsheet](http://sunlightfoundation.com/blog/2014/03/11/making-json-as-simple-as-a-spreadsheet/)".
