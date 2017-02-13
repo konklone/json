@@ -109,17 +109,17 @@ function doJSON() {
 //	}
 //}
 
-//function showCSV(rendered) {
-//	if (rendered) {
-//		if ($(".csv table").html()) {
-//			$(".csv .rendered").show();
-//			$(".csv .editing").hide();
-//		}
-//	} else {
-//		$(".csv .rendered").hide();
-//		$(".csv .editing").show().focus();
-//	}
-//}
+function showCSV(rendered) {
+	if (rendered) {
+		if ($(".csv table").html()) {
+			$(".csv .rendered").show();
+			$(".csv .editing").hide();
+		}
+	} else {
+		$(".csv .rendered").hide();
+		$(".csv .editing").show().focus();
+	}
+}
 
 // takes an array of flat JSON objects, converts them to arrays
 // renders them into a small table as an example
