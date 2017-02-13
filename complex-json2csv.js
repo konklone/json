@@ -284,7 +284,7 @@ function doCSV(json) {
 
 	// console.log("Updated error reporting link to:" + finalUrl);
 //	return true;
-/}
+//}
 
 // given a valid gist ID, set the permalink to use it
 //function setPermalink(id) {
