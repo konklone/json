@@ -1,20 +1,19 @@
 {
-    "name": "complex-json2csv",
-    "preferGlobal": true,
-    "version": "0.0.1",
-    "author": "Dana M. Lewis",
-    "description": "command line json2csv converter that supports super large files and complex, unknown json schemas",
-    "license": "MIT",
-    "engines": {
-        "node": ">=0.10"
-    },
-    "bin": {
-        "complex-json2csv": "./complex-json2csv.js",
-        "jsonsplit": "./jsonsplit.sh"
-    },
-    "dependencies": {
-        "jquery": "~3.1.1",
-        "jsdom": "~9.11.0"
-        
-    }
+  "name": "complex-json2csv",
+  "preferGlobal": true,
+  "version": "0.0.2",
+  "author": "Dana M. Lewis",
+  "description": "command line json2csv converter that supports super large files and complex, unknown json schemas",
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.10"
+  },
+  "bin": {
+    "complex-json2csv": "./complex-json2csv.js",
+    "jsonsplit": "./jsonsplit.sh"
+  },
+  "dependencies": {
+    "jquery": "~3.1.1",
+    "jsdom": "~9.11.0"
+  }
 }
