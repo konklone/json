@@ -86,6 +86,10 @@ function quoteKeys(input) {
   return input.replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2": ');
 }
 
+function removeSmartQuotes(input) {
+  return input.replace(/[“”]/g, "\"");
+}
+
 function removeTrailingComma(input) {
   if (input.slice(-1) == ",")
     return input.slice(0,-1);
@@ -120,11 +124,11 @@ function jsonFrom(input) {
   }
 
   if (result == null) {
-    console.log("Parse failed, retrying after forcibly quoting keys and removing trailing commas...")
-    var relaxed = quoteKeys(removeTrailingComma(string))
+    console.log("Parse failed, retrying after forcibly quoting keys, replacing smart quotes, and removing trailing commas...")
+    var relaxed = quoteKeys(removeSmartQuotes(removeTrailingComma(string)));
     try {
       result = JSON.parse(relaxed);
-      console.log("Yep: quoting keys and removing trailing commas worked!")
+      console.log("Yep: quoting keys and removing trailing commas worked!");
     } catch (err) {
       console.log(err);
     }
