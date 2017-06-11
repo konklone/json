@@ -128,7 +128,7 @@ function jsonFrom(input) {
     var relaxed = quoteKeys(removeSmartQuotes(removeTrailingComma(string)));
     try {
       result = JSON.parse(relaxed);
-      console.log("Yep: quoting keys and removing trailing commas worked!");
+      console.log("Yep: quoting keys, replacing smart quotes, and removing trailing commas worked!");
     } catch (err) {
       console.log(err);
     }
