@@ -63,7 +63,7 @@ but: only check when on the production domain.
     input = newInput;
     if (!input) {
       // wipe the rendered version too
-      $(".json code").html("");
+      $(".json code").text("");
       return;
     }
 
@@ -77,7 +77,7 @@ but: only check when on the production domain.
       $("div.warning").show();
 
       var pretty = JSON.stringify(json, undefined, 2);
-      $(".json code").html(pretty);
+      $(".json code").text(pretty);
       if (pretty.length < (50 * 1024))
         hljs.highlightBlock($(".json code").get(0));
 
@@ -87,7 +87,7 @@ but: only check when on the production domain.
       // Show error.
       $("div.warning").hide();
       $("div.error").show();
-      $(".json code").html("");
+      $(".json code").text("");
     }
 
     // Either way, update the error-reporting link to include the latest.
@@ -100,7 +100,7 @@ but: only check when on the production domain.
   function showJSON(rendered) {
     console.log("ordered to show JSON: " + rendered);
     if (rendered) {
-      if ($(".json code").html()) {
+      if ($(".json code").text()) {
         console.log("there's code to show, showing...");
         $(".json .rendered").show();
         $(".json .editing").hide();
@@ -113,7 +113,7 @@ but: only check when on the production domain.
 
   function showCSV(rendered) {
     if (rendered) {
-      if ($(".csv table").html()) {
+      if ($(".csv table").text()) {
         $(".csv .rendered").show();
         $(".csv .editing").hide();
       }
@@ -131,7 +131,7 @@ but: only check when on the production domain.
 
     // find CSV table
     var table = $(".csv table")[0];
-    $(table).html("");
+    $(table).text("");
 
     // render header row
     var thead = document.createElement("thead");
@@ -139,7 +139,7 @@ but: only check when on the production domain.
     var header = rows[0];
     for (field in header) {
       var th = document.createElement("th");
-      $(th).html(header[field])
+      $(th).text(header[field])
       tr.appendChild(th);
     }
     thead.appendChild(tr);
@@ -151,7 +151,7 @@ but: only check when on the production domain.
       for (field in rows[i]) {
         var td = document.createElement("td");
         $(td)
-          .html(rows[i][field])
+          .text(rows[i][field])
           .attr("title", rows[i][field]);
         tr.appendChild(td);
       }
