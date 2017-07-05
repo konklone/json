@@ -96,6 +96,17 @@ but: only check when on the production domain.
     return true;
   }
 
+  function renderAll(e) {
+    var json = jsonFrom(input);
+    var inArray = arrayFrom(json);
+    var outArray = [];
+    for (var row in inArray) {
+      outArray[outArray.length] = parse_object(inArray[row]);
+    }
+    renderCSV(outArray);
+    $(".render-all").hide();
+  }
+
   // show rendered JSON
   function showJSON(rendered) {
     console.log("ordered to show JSON: " + rendered);
@@ -178,6 +189,7 @@ but: only check when on the production domain.
     // excerpt and render first 10 rows
     renderCSV(outArray.slice(0, excerptRows));
     showCSV(true);
+    $(".render-all").show();
 
     // show raw data if people really want it
     $(".csv textarea").val(csv);
@@ -328,6 +340,8 @@ but: only check when on the production domain.
       return false;
     })
 
+    $(".render-all").click(function(e) {renderAll(e);});
+
     // if there's no CSV to download, don't download anything.
     // also, log an analytics event.
     $(".csv a.download").click(function() {
@@ -476,6 +490,7 @@ but: only check when on the production domain.
     <textarea class="editing" readonly></textarea>
     <div class="table rendered">
       <table></table>
+      <a href="#" class="render-all">Show all <span class="rows count"></span> rows</a>
     </div>
   </div>
 </section>
