@@ -100,11 +100,11 @@ but: only check when on the production domain.
     var json = jsonFrom(input);
     var inArray = arrayFrom(json);
     var outArray = [];
-    for (var row in inArray) {
+    for (var row in inArray)
       outArray[outArray.length] = parse_object(inArray[row]);
-    }
     renderCSV(outArray);
-    $(".render-all").hide();
+    $(".show-render-all").hide();
+    return false;
   }
 
   // show rendered JSON
@@ -186,10 +186,13 @@ but: only check when on the production domain.
     $("span.rows.count").text("" + outArray.length);
 
     var csv = $.csv.fromObjects(outArray);
-    // excerpt and render first 10 rows
+    // excerpt and render first few rows
     renderCSV(outArray.slice(0, excerptRows));
     showCSV(true);
-    $(".render-all").show();
+
+    // if there's more we're not showing, add a link to show all
+    if (outArray.length > excerptRows)
+      $(".show-render-all").show();
 
     // show raw data if people really want it
     $(".csv textarea").val(csv);
@@ -340,7 +343,7 @@ but: only check when on the production domain.
       return false;
     })
 
-    $(".render-all").click(function(e) {renderAll(e);});
+    $(".render-all").click(renderAll);
 
     // if there's no CSV to download, don't download anything.
     // also, log an analytics event.
@@ -478,6 +481,10 @@ but: only check when on the production domain.
       <a download="result.csv" href="#" class="download">
         Download the entire CSV</a>,
 
+        <span class="show-render-all">
+          <a href="#" class="render-all">show all <span class="rows count"></span> rows</a>,
+        </span>
+
       or <a href="#" class="raw">show the raw data</a>.
     </span>
 
@@ -490,7 +497,6 @@ but: only check when on the production domain.
     <textarea class="editing" readonly></textarea>
     <div class="table rendered">
       <table></table>
-      <a href="#" class="render-all">Show all <span class="rows count"></span> rows</a>
     </div>
   </div>
 </section>

@@ -61,7 +61,7 @@ h1 {
 .csv table thead tr,
 .csv table tbody tr:nth-child(2n) {background-color: #f8f8f8;}
 
-.render-all {display: none;}
+.show-render-all {display: none;}
 
 .csv td, .csv th {
   max-width: 250px;
