@@ -13,7 +13,7 @@ h1 {
 
 
 /* position textareas and renderings over each other */
-.areas {position: relative; width: 90%; height: 17em;}
+.areas {position: relative; width: 90%; height: 18em;}
 
 .json textarea,
 .json pre,
@@ -60,6 +60,8 @@ h1 {
 .csv table tr {background-color: #fff;}
 .csv table thead tr,
 .csv table tbody tr:nth-child(2n) {background-color: #f8f8f8;}
+
+.show-render-all {display: none;}
 
 .csv td, .csv th {
   max-width: 250px;
