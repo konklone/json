@@ -13,6 +13,9 @@ To install and run via the command line:
  * `jsonsplit inputfile.json [records]` - this will split the file into records based on the [records] size
    * If you do not specify size, it defaults to splitting by 100000
 
+If not yet already done, also remember to install `json` via the command line:
+   * `npm install -g json`
+
 (Web tool originally from https://github.com/konklone/json; command line tool complex-csv2json and jsonsplit by [@DanaMLewis](https://github.com/danamlewis).)
 
 Please file all bugs [in the issue tracker](https://github.com/konklone/json/issues).
