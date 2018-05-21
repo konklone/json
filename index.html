@@ -42,15 +42,6 @@ but: only check when on the production domain.
   var excerptRows = 7;
   var input;
   var url;
-  var lastSaved;
-
-  // function log(msg) {
-  //   return $(".console").removeClass("error").html(msg);
-  // }
-
-  // function error(msg) {
-  //   return log(msg).addClass("error");
-  // }
 
   function doJSON() {
     // just in case
@@ -89,9 +80,6 @@ but: only check when on the production domain.
       $("div.error").show();
       $(".json code").text("");
     }
-
-    // Either way, update the error-reporting link to include the latest.
-    setErrorReporting(null, input);
 
     return true;
   }
@@ -204,113 +192,9 @@ but: only check when on the production domain.
     $(".csv a.download").attr("href", uri);
   }
 
-  // loads original pasted JSON from textarea, saves to anonymous gist
-  // rate-limiting means this could easily fail with a 403.
-  function saveJSON() {
-    if (!input) return false;
-    if (input == lastSaved) return false;
 
-    // save a permalink to an anonymous gist
-    var gist = {
-      description: "test",
-      public: false,
-      files: {
-        "source.json": {
-            "content": input
-        }
-      }
-    };
-
-    // TODO: show spinner/msg while this happens
-
-    console.log("Saving to an anonymous gist...");
-    $.post(
-      'https://api.github.com/gists',
-      JSON.stringify(gist)
-    ).done(function(data, status, xhr) {
-
-      // take new Gist id, make permalink
-      setPermalink(data.id);
-
-      // send analytics event
-      Events.permalink();
-
-      // mark what we last saved
-      lastSaved = input;
-
-      // update error-reporting link, including permalink
-      setErrorReporting(data.id, input);
-
-      console.log("Remaining this hour: " + xhr.getResponseHeader("X-RateLimit-Remaining"));
-
-    }).fail(function(xhr, status, errorThrown) {
-      console.log(xhr);
-
-      // send analytics event
-      Events.permalink_error(status);
-
-      // TODO: gracefully handle rate limit errors
-      // if (status == 403)
-
-      // TODO: show when saving will be available
-      // e.g. "try again in 5 minutes"
-      // var reset = xhr.getResponseHeader("X-RateLimit-Reset");
-      // var date = new Date();
-      // date.setTime(parseInt(reset) * 1000);
-      // use http://momentjs.com/ to say "in _ minutes"
-
-    });
-
-    return false;
-  }
-
-  // Updates the error-reporting link to include current details.
-  //
-  // If the passed-in `id` is not null, a permalink is included.
-  // If the passed-in `id` is null, then no permalink is included.
-  // (Needed explicitly because the current URL doesn't always refer
-  // to a permalink related to the current value of the textarea.)
-  //
-  // The current body of the textarea will be encoded into the URI,
-  // to pre-populate the GitHub issue template, but only if the body
-  // is < 7KB (7,168). GitHub's nginx server rejects query strings
-  // longer than ~8KB.
-  //
-  // If no `id` is given, and content is too long, the URL will
-  // encode only a title, and no body.
-  function setErrorReporting(id, content) {
-    var base = "https://github.com/konklone/json/issues/new";
-
-    var title = "Error parsing some specific JSON";
-
-    var body = "I'm having an issue converting this JSON:\n\n";
-    if (id) body += (
-      window.location.protocol + "//" +
-      window.location.host + window.location.pathname +
-      "?id=" + id + "\n\n"
-    );
-
-    if (content.length <= (7 * 1024))
-      body += ("```json\n" + content + "\n```");
-
-    var finalUrl = base + "?title=" + encodeURIComponent(title) +
-      "&body=" + encodeURIComponent(body);
-
-    $(".error a.report").attr("href", finalUrl);
-
-    // console.log("Updated error reporting link to:" + finalUrl);
-    return true;
-  }
-
-  // given a valid gist ID, set the permalink to use it
-  function setPermalink(id) {
-    if (history && history.pushState)
-      history.pushState({id: id}, null, "?id=" + id);
-
-    // log("Permalink created! (Copy from the location bar.)")
-  }
-
-  // check query string for gist ID
+  // Load any (now-deprecated) permalinks. We can't save them anymore,
+  // but old links can still work.
   function loadPermalink() {
     var id = getParam("id");
     if (!id) return;
@@ -355,9 +239,6 @@ but: only check when on the production domain.
       } else
         return false;
     });
-
-    // Both elements are present on page-load, so use normal click handler.
-    $(".save a, .error a.save").click(saveJSON);
 
     // transform the JSON whenever it's pasted/edited
     $(".json textarea")
@@ -418,6 +299,7 @@ but: only check when on the production domain.
     // highlight CSV on click
     $(".csv textarea").click(function() {$(this).focus().select();});
 
+    // Support (now-deprecated) anonymous gist-backed permalinks.
     loadPermalink();
   });
 </script>
@@ -436,10 +318,6 @@ but: only check when on the production domain.
 
     <span class="instruction rendered">
       Click your JSON below to edit.
-    </span>
-
-    <span class="save">
-      <a href="#">Create a permalink</a> any time.
     </span>
 
     <span>
@@ -466,9 +344,6 @@ but: only check when on the production domain.
     <a class="report" target="_blank"
       href="https://github.com/konklone/json/issues/new">
       file an issue</a>.
-    You can
-    <a class="save" href="#">create a permalink to the error</a>
-    any time.
   </div>
 </section>
 
