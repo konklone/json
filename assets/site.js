@@ -6,7 +6,7 @@ Events = {
 
 }
 
-function getParam(name) {
+getParam = function(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
         results = regex.exec(location.search);
@@ -18,7 +18,7 @@ function getParam(name) {
 
 // depends on jquery and jquery-csv (for now)
 
-function parse_object(obj, path) {
+parse_object = function(obj, path) {
     if (path == undefined)
         path = "";
 
@@ -49,8 +49,9 @@ function parse_object(obj, path) {
 
 
 // otherwise, just find the first one
-function arrayFrom(json) {
+arrayFrom = function(json) {
     var queue = [], next = json;
+
     while (next !== undefined) {
         if ($.type(next) == "array") {
 
@@ -75,15 +76,15 @@ function arrayFrom(json) {
 
 // adapted from Mattias Petter Johanssen:
 // https://www.quora.com/How-can-I-parse-unquoted-JSON-with-JavaScript/answer/Mattias-Petter-Johansson
-function quoteKeys(input) {
+quoteKeys = function(input) {
   return input.replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2": ');
 }
 
-function removeSmartQuotes(input) {
+removeSmartQuotes = function(input) {
   return input.replace(/[“”]/g, "\"");
 }
 
-function removeTrailingComma(input) {
+removeTrailingComma = function(input) {
   if (input.slice(-1) == ",")
     return input.slice(0,-1);
   else
@@ -93,19 +94,19 @@ function removeTrailingComma(input) {
 // Rudimentary, imperfect detection of JSON Lines (http://jsonlines.org):
 //
 // Is there a closing brace and an opening brace with only whitespace between?
-function isJSONLines(string) {
+isJSONLines = function(string) {
  return !!(string.match(/\}\s+\{/))
 }
 
 // To convert JSON Lines to JSON:
 // * Add a comma between spaced braces
 // * Surround with array brackets
-function linesToJSON(string) {
+linesToJSON = function(string) {
   return "[" + string.replace(/\}\s+\{/g, "}, {") + "]";
 }
 
 // todo: add graceful error handling
-function jsonFrom(input) {
+jsonFrom = function(input) {
   var string = $.trim(input);
   if (!string) return;
 
