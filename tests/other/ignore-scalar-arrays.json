@@ -1,0 +1,11 @@
+{
+"description": "Global rate of Examples",
+"formula": "Example / Foo",
+"aggregation": "RATIO",
+"tags": [
+"MARKETPLACE",
+"ANYTHING"
+],
+"unit": "%",
+"meta": { }
+}

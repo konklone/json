@@ -1,0 +1,2 @@
+uuid,name_space,title,description,formula,aggregation,unit
+ABC123,namespace,Example,Global rate of Examples,Example / Foo,RATIO,%

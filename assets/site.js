@@ -73,15 +73,6 @@ function arrayFrom(json) {
     return [json];
 }
 
-// adapted from Mattias Petter Johanssen:
-// https://www.quora.com/How-can-I-parse-unquoted-JSON-with-JavaScript/answer/Mattias-Petter-Johansson
-function quoteKeys(input) {
-  return input.replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2": ');
-}
-
-function removeSmartQuotes(input) {
-  return input.replace(/[“”]/g, "\"");
-}
 
 function removeTrailingComma(input) {
   if (input.slice(-1) == ",")
@@ -116,12 +107,25 @@ function jsonFrom(input) {
     console.log(err);
   }
 
+  // See json5.org for a definition, and tests/json5/canonical.json for
+  // an example of most of what JSON5 looks for.
   if (result == null) {
-    console.log("Parse failed, retrying after forcibly quoting keys, replacing smart quotes, and removing trailing commas...")
-    var relaxed = quoteKeys(removeSmartQuotes(removeTrailingComma(string)));
+    console.log("JSON parse failed, retrying as JSON5 (json5.org)...")
+    try {
+      result = JSON5.parse(string);
+      console.log("Yep: it was JSON5.");
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  // Allow a trailing comma at the end of the string.
+  if (result == null) {
+    console.log("JSON5 parse failed, retrying after removing trailing commas...")
+    var relaxed = removeTrailingComma(string);
     try {
       result = JSON.parse(relaxed);
-      console.log("Yep: quoting keys, replacing smart quotes, and removing trailing commas worked!");
+      console.log("Yep: removing trailing commas worked!");
     } catch (err) {
       console.log(err);
     }
