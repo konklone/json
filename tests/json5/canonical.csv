@@ -1,0 +1,2 @@
+unquoted,singleQuotes,lineBreaks,hexadecimal,leadingDecimalPoint,andTrailing,positiveSign,trailingComma,andIn/0,backwardsCompatible
+and you can quote me on that,"I can use ""double quotes"" here","Look, Mom! No \n's!",912559,0.8675309,8675309,1,in objects,arrays,with JSON

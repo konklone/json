@@ -1,0 +1,9 @@
+{
+uuid: "ABC123",
+name_space: "namespace",
+title: "Example",
+description: "Global rate of Examples",
+formula: "Example / Foo",
+aggregation: "RATIO",
+unit: "%"
+}
