@@ -3,11 +3,11 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<title>JSON to CSV</title>
-<meta name="og:title" content="JSON to CSV" />
+<title>JSON to CSV Converter</title>
+<meta name="og:title" content="JSON to CSV Converter" />
 
-<meta name="description" content="A simple, in-browser JSON viewer, and CSV converter." />
-<meta name="og:description" content="A simple, in-browser JSON viewer and CSV converter." />
+<meta name="description" content="A fast, private JSON-to-CSV converter. Your data is never shared with our servers." />
+<meta name="og:description" content="A fast, private JSON-to-CSV converter. Your data is never shared with our servers." />
 
 <meta name="author" content="Eric Mill" />
 <meta name="twitter:creator" content="@konklone" />
@@ -15,16 +15,6 @@
 
 <link rel="shortcut icon" href="/json/favicon.png" />
 <link rel="canonical" href="https://konklone.io/json/" />
-
-<!--
-redirect users to the https version of the website.
-but: only check when on the production domain.
--->
-<script type="text/javascript">
-  var enforce = "konklone.io";
-  if ((enforce == window.location.host) && (window.location.protocol != "https:"))
-    window.location.protocol = "https";
-</script>
 
 <!-- JSON5 parser -->
 <script src='assets/json5-2.1.0.min.js'></script>
