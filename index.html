@@ -34,6 +34,7 @@
 <script>
   var excerptRows = 7;
   var input;
+  var separator;
   var url;
 
   function doJSON() {
@@ -42,7 +43,8 @@
 
     // get input JSON, try to parse it
     var newInput = $(".json textarea").val();
-    if (newInput == input) return;
+    var newSeparator = getSeparator();
+    if (newInput == input && newSeparator == separator) return;
 
     input = newInput;
     if (!input) {
@@ -51,6 +53,7 @@
       return;
     }
 
+    separator = newSeparator;
     var json = jsonFrom(input);
 
     // if succeeded, prettify and highlight it
@@ -115,6 +118,23 @@
     }
   }
 
+  function getSeparator() {
+    var separator = $(".json .separator select").val();
+    
+    switch (separator) {
+      case "tab":
+        return "\t";
+        break;
+      case "semicolon":
+        return ';';
+        break;
+      case "comma":
+      default:
+        return ',';
+        break;
+    }
+  }
+
   // takes an array of flat JSON objects, converts them to arrays
   // renders them into a small table as an example
   function renderCSV(objects) {
@@ -166,7 +186,7 @@
 
     $("span.rows.count").text("" + outArray.length);
 
-    var csv = $.csv.fromObjects(outArray);
+    var csv = $.csv.fromObjects(outArray, {separator: getSeparator()});
     // excerpt and render first few rows
     renderCSV(outArray.slice(0, excerptRows));
     showCSV(true);
@@ -213,6 +233,7 @@
 
     $(".json textarea").blur(function() {showJSON(true);});
     $(".json pre").click(function() {showJSON(false)});
+    $(".json .separator select").change(function() {doJSON();});
     $(".csv textarea").blur(function() {showCSV(true);})
     $(".csv .raw").click(function() {
       showCSV(false);
@@ -326,6 +347,15 @@
     <textarea class="editing"></textarea>
     <pre class="rendered"><code></code></pre>
     <div class="drop">DROP JSON HERE</div>
+  </div>
+
+  <div class="separator">
+    Separator
+    <select name="separator">
+      <option value="comma" selected>Comma</option>
+      <option value="tab">Tab</option>
+      <option value="semicolon">Semicolon</option>
+    </select>
   </div>
 
   <div class="warning">
