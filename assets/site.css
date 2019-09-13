@@ -43,6 +43,7 @@ h1 {
 
 .json .error a.report {font-weight: bold;}
 .json .warning {margin-top: 5px; color: #888;}
+.json .separator {margin-top: 5px; }
 .json .error {
   display: none;
   margin-top: 5px;
