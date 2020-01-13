@@ -1,0 +1,8 @@
+{
+"description": "Global rate of Examples.
+
+We love examples in this here globe.",
+"formula": "Example / Foo",
+"aggregation": "RATIO",
+"unit": "%"
+}

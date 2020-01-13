@@ -95,6 +95,22 @@ function linesToJSON(string) {
   return "[" + string.replace(/\}\s+\{/g, "}, {") + "]";
 }
 
+// Imperfect detection of whether the JSON object has unescaped newlines
+// in the string values of its object.
+function hasLineBreaksInStrings(string) {
+  return !!(string.match(/([^,\{\}\[\]\n\"\'"])([\n]{1,})/));
+}
+
+// If the JSON object appears to have unescaped newlines, try escaping them.
+function escapeLineBreaksInStrings(string) {
+  return string.replace(
+    /([^,\{\}\[\]\n\"\'"])([\n]{1,})/g,
+    function (match, prefix, newlines) {
+      return "" + prefix + newlines.replace(/\n/g, "\\n")
+    }
+  );
+}
+
 // todo: add graceful error handling
 function jsonFrom(input) {
   var string = $.trim(input);
@@ -119,6 +135,7 @@ function jsonFrom(input) {
     }
   }
 
+  // TODO: Doesn't the JSON5 parser handle this already?
   // Allow a trailing comma at the end of the string.
   if (result == null) {
     console.log("JSON5 parse failed, retrying after removing trailing commas...")
@@ -128,6 +145,29 @@ function jsonFrom(input) {
       console.log("Yep: removing trailing commas worked!");
     } catch (err) {
       console.log(err);
+    }
+  }
+
+  // Detect if there might be newlines inside the string values of the JSON.
+  // It's hard to detect the difference between newlines inside and outside of
+  // string values, so this is tried near last. But if it does incorrectly
+  // mess up the object, it's only done if it wasn't parsing anyway, so no harm.
+  if ((result == null) && hasLineBreaksInStrings(string)) {
+    console.log("Parse failed. Looks like it might have newlines in the string values, retrying...");
+    var escaped = escapeLineBreaksInStrings(string);
+    // console.log("Escape attempt:");
+    // console.log(escaped);
+    try {
+      result = JSON.parse(escaped);
+      console.log("Yep: it had newlines in the JSON!");
+    } catch (err) {
+
+      try {
+        result = JSON5.parse(escaped);
+        console.log("Yep: it had newlines in the JSON, and needed JSON5 parsing!");
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
 
